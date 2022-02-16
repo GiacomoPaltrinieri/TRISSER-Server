@@ -1,0 +1,15 @@
+#titolo{
+    text-align: center;
+    margin: 10px;
+}
+
+#my_form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#my_form input{
+    margin: 10px;
+}
