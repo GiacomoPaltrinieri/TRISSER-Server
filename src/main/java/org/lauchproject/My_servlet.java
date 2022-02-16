@@ -38,6 +38,8 @@ public class My_servlet extends HttpServlet{
 
         new GameSettings(rules,users);
 
+        out.println("<h2>Dati ricevuti</h2>");
+
     }
 
     public void destroy() {
