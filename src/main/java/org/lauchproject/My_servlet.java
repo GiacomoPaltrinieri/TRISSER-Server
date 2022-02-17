@@ -15,6 +15,7 @@ public class My_servlet extends HttpServlet{
     protected void  doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         // Hello
+        //test commit ali not working github
         PrintWriter out = response.getWriter();
         out.println("<h3>Rule selected!</h3>");
 
