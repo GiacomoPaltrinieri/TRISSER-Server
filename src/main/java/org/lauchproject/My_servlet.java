@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "MyServlet",value ="/MyServlet")
+@WebServlet(name = "MyServlet1",value ="/MyServlet1")
 public class My_servlet extends HttpServlet{
 
     @Override
