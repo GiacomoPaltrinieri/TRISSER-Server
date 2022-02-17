@@ -8,8 +8,27 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.util.ListIterator;
+import java.util.Scanner;
 
 public class GameSettings {
+/** This function takes a path and creates a JSONArray using the data written to it **/
+    public static JSONArray fileToJsonArray(String path){
+        File file = new File(path);
+        Scanner line = null;
+        try {
+            line = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        JSONArray userInfo = new JSONArray();
+
+        while (line.hasNext()){
+            userInfo.add(line.nextLine());
+        }
+
+        return userInfo;
+    }
+
     /** This method takes a String containing one or more commands (command -> to use more commands, just insert command1 && command2...) to execute in the CMD, the result String you get in return is the output of the command you would see on the CMD**/
     public static String executeCommand(String command) {
         String line;
@@ -72,12 +91,12 @@ public class GameSettings {
             users_pwd.add(user + ":" + pwd);
             pwds.add(pwd);
         }
-        writeToFile(path,users_pwd);
+        writeToFile(path,users_pwd, false);
         executeCommand("cd " + path.replace(file_name, "") + " && mosquitto_passwd -U pwfile.txt"); // hashes the password file
         return pwds;
     }
     /** This function writes on a file which path has to be specified (including file name) in path (note that you have to use a separator, or 2 \\ -> NOT C:\...\file.txt BUT C:\\...\\file.txt). every line that has to be written has to be placed in an Arraylist element (lines)**/
-    public static void writeToFile(String path, ArrayList<String> lines) {
+    public static void writeToFile(String path, ArrayList<String> lines, boolean append) {
         File file = new File(path); // Creates File object with the specified path. The path must include the filename
         if (!file.exists()) {
             try {
@@ -90,7 +109,7 @@ public class GameSettings {
         }
         FileWriter fw = null;
         try {
-            fw = new FileWriter(file.getAbsoluteFile());
+            fw = new FileWriter(file.getAbsoluteFile(), append);
         } catch (IOException e) {
             System.out.println("something went wrong while starting the FileWriter");
         }
@@ -164,6 +183,8 @@ public class GameSettings {
             SendMail.send(users.get(i), "GAME", mails.get(i));
             singleMail.clear();
         }
+        String path = "userInfo.txt";
+        writeToFile(path, mails, false);
         System.out.println(mails);
     }
     /** This function writes the ACLS for every user on the config file **/
@@ -183,7 +204,7 @@ public class GameSettings {
             }
         }
 
-        writeToFile(path, toWrite);
+        writeToFile(path, toWrite, false);
     }
 
     private static int subRoomGenerator(int size, int bot_instances) {
@@ -217,39 +238,39 @@ public class GameSettings {
 
         // writes to file the game and time of the game
         String separator = System.getProperty("file.separator");
-        String path = ".." + separator + "time.txt";
+        String path = "time.txt";
         ArrayList<String> ruleLine = new ArrayList<>();
         ruleLine.add((String) rules.get("date"));
 
-        writeToFile(path, ruleLine);
+        writeToFile(path, ruleLine, false);
     }
 
     /** Main method **/
-//    public static void main(String[] args) {
-//        ArrayList<String> users = new ArrayList<>();
-//        JSONObject rules = new JSONObject();
-//        rules.put("time", 20);
-//        rules.put("bot_number", 150);
-//        rules.put("connection_time", 20);
-//        rules.put("date", "2002-08-22 15:30:22");
-//
-//        users.add("TRISSER.server@gmail.com");
-//        users.add("giaco.paltri@gmail.com");             // list of users
-//        users.add("abdullah.ali@einaudicorreggio.it");
-//
-//        ArrayList<String> topics = setACLs(users);
-//        ArrayList<String> pwds = setPassword(users);
-//        System.out.println(executeCommand("cd C:\\Program Files\\mosquitto\\ && Net start Mosquitto")); // Starts the mosquitto broker
-//        new MQTTPubPrint(); // test send message
-//        System.out.println(executeCommand("Taskkill /IM \"mosquitto.exe\" /F")); // Closes the mosquitto broker
-//        generateMailContent(users, topics, pwds, rules, 150);
-//
-//        // writes to file the game and time of the game
-//        String separator = System.getProperty("file.separator");
-//        String path = ".." + separator + "time.txt";
-//        ArrayList<String> ruleLine = new ArrayList<>();
-//        ruleLine.add((String) rules.get("date"));
-//
-//        writeToFile(path, ruleLine);
-//    }
+    public static void main(String[] args) {
+        ArrayList<String> users = new ArrayList<>();
+        JSONObject rules = new JSONObject();
+        rules.put("time", 20);
+        rules.put("bot_number", 150);
+        rules.put("connection_time", 20);
+        rules.put("date", "2002-08-22 15:30:22");
+
+        users.add("TRISSER.server@gmail.com");
+        users.add("giaco.paltri@gmail.com");             // list of users
+        users.add("abdullah.ali@einaudicorreggio.it");
+
+        ArrayList<String> topics = setACLs(users);
+        ArrayList<String> pwds = setPassword(users);
+        System.out.println(executeCommand("cd C:\\Program Files\\mosquitto\\ && Net start Mosquitto")); // Starts the mosquitto broker
+        new MQTTPubPrint(); // test send message
+        System.out.println(executeCommand("Taskkill /IM \"mosquitto.exe\" /F")); // Closes the mosquitto broker
+        generateMailContent(users, topics, pwds, rules, 150);
+
+        // writes to file the game and time of the game
+        String separator = System.getProperty("file.separator");
+        String path = "time.txt";
+        ArrayList<String> ruleLine = new ArrayList<>();
+        ruleLine.add((String) rules.get("date"));
+
+        writeToFile(path, ruleLine, false);
+    }
 }
