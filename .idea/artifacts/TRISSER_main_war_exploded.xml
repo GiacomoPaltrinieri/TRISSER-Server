@@ -16,6 +16,7 @@
         </element>
       </element>
       <element id="javaee-facet-resources" facet="TRISSER-main/web/Web" />
+      <element id="javaee-facet-resources" facet="mqtt_conn/web/Web" />
     </root>
   </artifact>
 </component>

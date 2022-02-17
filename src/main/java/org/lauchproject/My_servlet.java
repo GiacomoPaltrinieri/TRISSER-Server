@@ -25,17 +25,18 @@ public class My_servlet extends HttpServlet{
         String email_2=request.getParameter("email_2");
         String email_3=request.getParameter("email_3");
 
+        out.println("<h3>qui ci entra 222222222 !</h3>");
+
         JSONObject rules = new JSONObject();
             rules.put("time", 20);
             rules.put("bot_number", bot_num);
             rules.put("connection_time", 20);
-            rules.put("date", data+time+":00");
+            rules.put("date", data + " " + time + ":00");
 
         ArrayList<String> users=new ArrayList<>();
         users.add(email_1);
         users.add(email_2);
         users.add(email_3);
-
         new GameSettings(rules,users);
 
         out.println("<h2>Dati ricevuti</h2>");
