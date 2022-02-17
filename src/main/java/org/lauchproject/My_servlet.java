@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "MyServlet1",value ="/MyServlet1")
+@WebServlet(name = "MyServlet",value ="/MyServlet")
 public class My_servlet extends HttpServlet{
 
     @Override
@@ -26,7 +26,6 @@ public class My_servlet extends HttpServlet{
         String email_2=request.getParameter("email_2");
         String email_3=request.getParameter("email_3");
 
-        out.println("<h3>qui ci entra 222222222 !</h3>");
 
         JSONObject rules = new JSONObject();
             rules.put("time", 20);
@@ -41,6 +40,7 @@ public class My_servlet extends HttpServlet{
         new GameSettings(rules,users);
 
         out.println("<h2>Dati ricevuti</h2>");
+        out.println("<h2>HY GREG</h2>");
 
     }
 

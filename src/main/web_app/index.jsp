@@ -8,7 +8,7 @@
     <body>
         <h1 id="titolo"> TRISSER </h1>
         <br/>
-        <form action="MyServlet1" method="post" id="my_form">
+        <form action="MyServlet" method="post" id="my_form">
             <input type="date" placeholder="DATA" name="data">
             <input type="time" placeholder="TIME" name="time">
             <input type="number" placeholder="NUMERO BOT" name="bot_num">
