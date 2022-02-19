@@ -261,7 +261,7 @@ public class GameSettings {
         ArrayList<String> topics = setACLs(users);
         ArrayList<String> pwds = setPassword(users);
         System.out.println(executeCommand("cd C:\\Program Files\\mosquitto\\ && Net start Mosquitto")); // Starts the mosquitto broker
-        new MQTTPubPrint(); // test send message
+        //new MQTTPubPrint(); // test send message
         System.out.println(executeCommand("Taskkill /IM \"mosquitto.exe\" /F")); // Closes the mosquitto broker
         generateMailContent(users, topics, pwds, rules, 150);
 
