@@ -265,12 +265,9 @@ public class GameSettings {
         System.out.println(executeCommand("Taskkill /IM \"mosquitto.exe\" /F")); // Closes the mosquitto broker
         generateMailContent(users, topics, pwds, rules, 150);
 
-        // writes to file the game and time of the game
-        String separator = System.getProperty("file.separator");
-        String path = "time.txt";
-        ArrayList<String> ruleLine = new ArrayList<>();
-        ruleLine.add((String) rules.get("date"));
-
-        writeToFile(path, ruleLine, false);
+        String path = "rules.txt"; // writes rules in a file
+        ArrayList<String> rulesList = new ArrayList<>();
+        rulesList.add(rules.toString());
+        writeToFile(path, rulesList, false);
     }
 }

@@ -2,11 +2,17 @@ package org.lauchproject;
 
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -54,6 +60,26 @@ public class MQTTPubPrint {
             sampleClient.subscribe("online/#"); //Listen to online topics
             System.out.println("Connected");
 
+            ArrayList<JSONObject> rules = getJSONfromFile("rules.txt");
+            int time;
+            time = Integer.parseInt(String.valueOf(rules.get(0).get("connection_time")));
+            time = time*1000; // conversion in seconds
+
+            int finalTime = time;
+            startMethodAfterNMilliseconds(new Runnable() {
+                @Override
+                public void run() {
+                    // myMethod(); // Your method goes here.
+                    try {
+                        sampleClient.unsubscribe("online/#");
+                        System.out.println(finalTime);
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, time);
+
+
 
 
 //            String topic = "online/dalterio.dario@einaudicorreggio.it";
@@ -72,7 +98,42 @@ public class MQTTPubPrint {
             me.printStackTrace();
         }
     }
+    /** Returns an ArrayList containing JsonObjects given a specific file **/
+    private static ArrayList<JSONObject> getJSONfromFile(String filePath) {
+        File file = new File(filePath);
+        Scanner line = null;
+        try {
+            line = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        JSONParser parser = new JSONParser();
+        ArrayList<JSONObject> data = new JSONArray();
 
-    public MQTTPubPrint() {
+        while (line.hasNext()){
+            try {
+                data.add((JSONObject) parser.parse(line.nextLine()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(data);
+        return data;
+    }
+
+    JSONArray userInfo = GameSettings.fileToJsonArray("userInfo"); // fetch all informations about users and rules
+
+   JSONObject user = (JSONObject) userInfo.get(0);
+
+    /** This function waits for a specific time to execute a specific function **/
+    public static void startMethodAfterNMilliseconds(Runnable runnable, int milliSeconds) {
+        Timer timer = new Timer(milliSeconds, new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                runnable.run();
+            }
+        });
+        timer.setRepeats(false); // Only execute once
+        timer.start();
     }
 }
