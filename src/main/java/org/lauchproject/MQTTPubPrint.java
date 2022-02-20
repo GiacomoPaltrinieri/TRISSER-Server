@@ -13,13 +13,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
 public class MQTTPubPrint {
 
-
+    public static JSONObject onlineUsers = new JSONObject();
     public static void main(String[] args) {
+
+        for (String s : Arrays.asList("TRISSER.server@gmail.com", "giaco.paltri@gmail.com", "abdullah.ali@einaudicorreggio.it")) {
+            onlineUsers.put(s, false);
+        }// list of users
+
         try {
             int qos = 1;
             String broker = "tcp://localhost:1883";
@@ -45,11 +51,14 @@ public class MQTTPubPrint {
                     String msg = message.toString();
                     JSONParser parser = new JSONParser();
                     JSONObject json = (JSONObject) parser.parse(msg);
+                    String user;
 
                     if(!Objects.isNull(json.get("move"))){
                         System.out.println(json.get("move"));
-                    }else{
-                        System.out.println("Nulla casso");
+                    }else if (!Objects.isNull(json.get("online")) && topic.contains("online/")){
+                        user = topic.replace("online/", "");
+                        onlineUsers.replace(user, true); //user is online
+                        System.out.println(user + " True");
                     }
                 }
 
@@ -73,6 +82,8 @@ public class MQTTPubPrint {
                     try {
                         sampleClient.unsubscribe("online/#");
                         System.out.println(finalTime);
+                        checkForNotConnected(onlineUsers);
+                        System.out.println(onlineUsers.toString());
                     } catch (MqttException e) {
                         e.printStackTrace();
                     }
@@ -98,6 +109,17 @@ public class MQTTPubPrint {
             me.printStackTrace();
         }
     }
+
+    private static void checkForNotConnected(JSONObject onlineUsers) {
+       onlineUsers.forEach((key, value) -> {
+           if (value.toString().equals("false")) notConnected(key.toString()); //value == false, client not connected
+       });
+    }
+
+    private static void notConnected(String toString) {
+
+    }
+
     /** Returns an ArrayList containing JsonObjects given a specific file **/
     private static ArrayList<JSONObject> getJSONfromFile(String filePath) {
         File file = new File(filePath);
@@ -108,17 +130,17 @@ public class MQTTPubPrint {
             e.printStackTrace();
         }
         JSONParser parser = new JSONParser();
-        ArrayList<JSONObject> data = new JSONArray();
+        ArrayList<JSONObject> json = new JSONArray();
 
         while (line.hasNext()){
             try {
-                data.add((JSONObject) parser.parse(line.nextLine()));
+                json.add((JSONObject) parser.parse(line.nextLine()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println(data);
-        return data;
+        System.out.println(json);
+        return json;
     }
 
     JSONArray userInfo = GameSettings.fileToJsonArray("userInfo"); // fetch all informations about users and rules

@@ -180,7 +180,7 @@ public class GameSettings {
 
             writeACLS(users, topics, subRoomList);
 
-            SendMail.send(users.get(i), "GAME", mails.get(i));
+            //SendMail.send(users.get(i), "GAME", mails.get(i));
             singleMail.clear();
         }
         String path = "userInfo.txt";
@@ -193,19 +193,29 @@ public class GameSettings {
         String separator = System.getProperty("file.separator");
         String path = "C:" + separator + "Program Files" + separator + "mosquitto" + separator + "aclfile.txt";
         ArrayList<String> toWrite = new ArrayList<>();
-        toWrite.add("# This affects access control for clients with no username.");
-        toWrite.add("topic read $SYS/#");
+
         for (String user:users){ // for every user
             toWrite.add("user " + user);
             accessedTopics = getTopicAccess(topics,user);
             for (int i = 0; i < accessedTopics.size(); i++){
-                for (int j = 0; j < subRoomList; j++)
-                    toWrite.add("topic " + accessedTopics.get(i) + "/" + j);
+                for (int j = 0; j < subRoomList; j++) {
+                    toWrite.add("topic readwrite " + accessedTopics.get(i) + "/" + j + "/" + user);
+                    toWrite.add("topic read " + accessedTopics.get(i) + "/" + j + "/#");
+                }
             }
         }
 
         writeToFile(path, toWrite, false);
     }
+
+    /** returns the other user given a topic and a user**/
+    private static String getOtherUser(String user, String topic) {
+        String otherUser;
+        otherUser = topic.replace(user, "");
+        otherUser = otherUser.replace("_", "");
+        return otherUser;
+    }
+
 
     private static int subRoomGenerator(int size, int bot_instances) {
         return bot_instances/size;
