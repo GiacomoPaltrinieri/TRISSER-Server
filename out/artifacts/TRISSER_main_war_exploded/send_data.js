@@ -1,30 +1,36 @@
 
+/**Function for Sending data to MyServlet whitout Reloading page**/
 function take_values(){
 
-   /* var bot_num=document.forms["myform"] ["bot_num"].value;
-    var email_1=document.forms["myform"] ["email_1"].value;
-    var email_2=document.forms["myform"] ["email_2"].value;
-    var email_3=document.forms["myform"] ["email_3"].value;
-    var temp_gioco_bot=,documdocument.forms["myform"] ["temp_gioco_bot"].value;*/
+    var data="bot_num="+encodeURIComponent(document.forms["myform"]["bot_num"].value)+
+        "&temp_gioco_bot="+encodeURIComponent(document.forms["myform"] ["temp_gioco_bot"].value)+
+        "&temp_connessione="+encodeURIComponent(document.forms["myform"] ["temp_connessione"].value)+
+        "&data_start_game="+encodeURIComponent(document.forms["myform"] ["data_start_game"].value)+
+        "&temp_start_game="+encodeURIComponent(document.forms["myform"] ["temp_start_game"].value);
+
+    for (i=0;i<document.forms["myform"]["bot_num"].value;i++){
+        data=data+"&email_"+i+"="+encodeURIComponent(document.forms["myform"] ["email_"+i].value)
+    }
 
     var http = new XMLHttpRequest();
 
     http.open("POST", "http://localhost:8080/TRISSER_main_war_exploded/MyServlet", true);
     http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-
-    http.onerror = function() { // only triggers if the request couldn't be made at all
-        alert(`Network Error`);
-    };
-
-    http.send("num_bot_p",document.forms["myform"] ["bot_num"].value,
-        "email_1_P",document.forms["myform"] ["email_1"].value,
-        "email_2_p",document.forms["myform"] ["email_2"].value,
-        "email_3_p",document.forms["myform"] ["email_3"].value,
-        "temp_gioco_bot_p",document.forms["myform"] ["temp_gioco_bot"].value,
-        "temp_connessione_p",document.forms["myform"] ["temp_connessione"].value,
-        "data_start_game_p",document.forms["myform"] ["data_start_game"].value,
-        "temp_start_game_p",document.forms["myform"] ["temp_start_game"].value);
+    http.send(data);
 
     return false;
 
+}
+
+/**Function to create Multiple input tags for the email input**/
+
+function create_input(){
+    var cont=document.forms["myform"]["bot_num"].value;
+    console.log("contatore-->",cont)
+    var container=document.getElementById("input_cont")
+    container.innerHTML="";
+    var name="email_";
+    for (i=0;i<cont;i++){
+        container.innerHTML=container.innerHTML+ '<input type="email" placeholder="EMAIL" name='+name+i+' class="myin">';
+    }
 }
