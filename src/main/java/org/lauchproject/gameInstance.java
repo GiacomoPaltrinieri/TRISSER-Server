@@ -14,15 +14,14 @@ public class gameInstance {
     final int getUSER=2;
     /** Attributes **/
     private String topic;
+    private int room_number;
     private String[] players = new String[2]; // players involved in this room
-    private ArrayList<SingleRoom>  rooms; // all the rooms (room_number, ArrayList moves, userMove)
-    private String[] whoHasToMove; // list of who has to make a move
-    private String p1,p2;
+    private ArrayList<SingleRoom>  rooms = new ArrayList<>(); // all the rooms (room_number, ArrayList moves, userMove)
 
     /** Methods **/
 
     /** Constructor **/
-    public gameInstance(String[] players, JSONArray rooms, String topic) {
+    public gameInstance(String[] players, JSONArray rooms, String topic, int room_number, String time) {
         this.players = players;
         this.rooms = rooms;
         this.topic = subStringTopic("/", getTOPIC);
@@ -30,26 +29,19 @@ public class gameInstance {
         players[0] = subStringTopic("_", 0);
         players[1] = subStringTopic("_", 1);
 
-        whoHasToMove = new String[rooms.size()]; // if the room number is divisible by 2 p1 starts, is the room number is odd p2 starts
-        for (int i = 0; i < rooms.size(); i++){
-            if (i % 2 == 0)
-                whoHasToMove[i] = players[0];
+        JSONObject obj = new JSONObject();
+        for (int i = 0; i < this.room_number; i++){
+            obj.clear();
+            obj.put(players[0], time);
+            obj.put(players[1], time);
+            if (i%2==0)
+                rooms.add(new SingleRoom(i, obj, players[0]));
             else
-                whoHasToMove[i] = players[1];
+                rooms.add(new SingleRoom(i, obj, players[1]));
         }
+
     }
 
-    public void validMove(){}
-
-    public void moveValidation (int move){
-        String user = subStringTopic("/", getUSER);
-        int instance = Integer.parseInt(subStringTopic("/", getINSTANCE));
-        if (user.equals(whoHasToMove[instance])){
-            //User turn, correct
-        }else{
-            //not his turn, incorrect
-        }
-    }
 //    /** Given a specific topic this function returns the user that has sent the message **/
 //    public String getUser(String topic){
 //        int lastIndexOf = topic.lastIndexOf( "/" );

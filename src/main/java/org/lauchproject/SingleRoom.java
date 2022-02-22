@@ -5,7 +5,6 @@ import org.json.simple.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class SingleRoom {
 
@@ -19,13 +18,13 @@ public class SingleRoom {
     public static ArrayList<String> winningMoves = new ArrayList<>(Arrays.asList("147", "258", "369", "123", "456", "789", "159", "357"));
 
     /** Constructor **/
-    public SingleRoom(int roomNumber, JSONObject players, ArrayList<Integer> moves, String playerToMove) {
+    public SingleRoom(int roomNumber, JSONObject players, String playerToMove) {
         this.roomNumber = roomNumber;
         this.players = players;
         this.playerToMove = playerToMove;
     }
 
-    public void setMoves(int move, String user) {
+    public void makeMove(int move, String user) {
         if (user.equals(playerToMove)){
             // user turn to move
             if (moves.contains(move)){
@@ -33,15 +32,28 @@ public class SingleRoom {
             }else if(move > 9 || move < 1){
                 System.out.println("invalid move");
             } else if(moves.size()<=5){
+                moves.add(move);
+                changePlayerToMove();
                 System.out.println("numero di mosse insufficienti per vincere, mossa valida");
             }else{
                 moves.add(move);
-                changePlayerToMove();
                 if (isWinning(move)){
-
+                    System.out.println(playerToMove + " has won");
+                }else if (moves.size() == 9){
+                    System.out.println("no one has won (pareggio)");
+                }
+                 else{
+                    changePlayerToMove();
+                    System.out.println("not won");
                 }
             }
+        }else{
+            System.out.println("not his turn");
         }
+    }
+
+    public ArrayList<Integer> getMoves() {
+        return moves;
     }
 
     private boolean isWinning(int move) {
@@ -59,6 +71,7 @@ public class SingleRoom {
                 playerMoves.add(moves.get(i));
         Collections.sort(playerMoves);
         System.out.println(playerMoves);
+
         temp="";
         for (int i = 0; i < playerMoves.size(); i++)
             temp = temp + playerMoves.get(i);
