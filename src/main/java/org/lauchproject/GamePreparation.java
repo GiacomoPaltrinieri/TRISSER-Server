@@ -15,7 +15,7 @@ public class GamePreparation {
 
     private static class MyTimeTask extends TimerTask {
         public void run() {
-            new StartGame();
+            new MQTTPubPrint(); // start game
             System.out.println("enters here");
             timer.cancel();
         }

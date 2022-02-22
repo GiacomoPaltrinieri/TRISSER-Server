@@ -19,8 +19,10 @@ import java.util.Scanner;
 
 public class MQTTPubPrint {
 
-    public static JSONObject onlineUsers = new JSONObject();
-    public static void main(String[] args) {
+    public JSONObject onlineUsers = new JSONObject();
+    ArrayList<gameInstance> instances = new ArrayList(); // list of every topic
+
+    public MQTTPubPrint() {
 
         for (String s : Arrays.asList("TRISSER.server@gmail.com", "giaco.paltri@gmail.com", "abdullah.ali@einaudicorreggio.it")) {
             onlineUsers.put(s, false);
@@ -52,7 +54,7 @@ public class MQTTPubPrint {
                     JSONParser parser = new JSONParser();
                     JSONObject json = (JSONObject) parser.parse(msg);
                     String user;
-
+                        // controlla le topic, cambia online perchè devi riconoscere l'user
                     if(!Objects.isNull(json.get("move"))){
                         System.out.println(json.get("move"));
                     }else if (!Objects.isNull(json.get("online")) && topic.contains("online/")){
@@ -88,7 +90,7 @@ public class MQTTPubPrint {
                         e.printStackTrace();
                     }
                 }
-            }, time);
+            }, time); // connection time is over
 
 
 
