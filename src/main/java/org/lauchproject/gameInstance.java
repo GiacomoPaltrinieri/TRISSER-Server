@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
 import static java.io.File.separator;
 /** This class describes every single room, it's players and everything related to all the games that have to played in that  **/
 public class gameInstance {
-    final int getTOPIC=0;
-    final int getINSTANCE=1;
-    final int getUSER=2;
+    public static final int getTOPIC=0;
+    public final int getINSTANCE=1;
+    public final int getUSER=2;
     /** Attributes **/
     private String topic;
     private int room_number;
@@ -21,9 +21,7 @@ public class gameInstance {
     /** Methods **/
 
     /** Constructor **/
-    public gameInstance(String[] players, JSONArray rooms, String topic, int room_number, String time) {
-        this.players = players;
-        this.rooms = rooms;
+    public gameInstance( String topic, int room_number, String time) {
         this.topic = subStringTopic(topic, "/", getTOPIC);
         this.room_number = room_number;
 
@@ -52,7 +50,7 @@ public class gameInstance {
 //    }
 
     /** subtracts data from the topic **/
-    public String subStringTopic(String string, String splitChars, int index){
+    public static String subStringTopic(String string, String splitChars, int index){
         //index = getTOPIC || (0) -> topic
         //index = getINSTANCE || (1) -> instance
         //index = getUSER || (2) -> user

@@ -17,12 +17,16 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
+import static org.lauchproject.gameInstance.getTOPIC;
+
 public class MQTTPubPrint {
 
     public JSONObject onlineUsers = new JSONObject();
     ArrayList<gameInstance> instances = new ArrayList(); // list of every topic
     private ArrayList<String> topics = new ArrayList<>();
-
+    private ArrayList<gameInstance> rooms = new ArrayList<>();
+    private ArrayList<JSONObject> rules = getJSONfromFile("rules.txt");
+    private String time;
     public MQTTPubPrint() {
 
         for (String s : Arrays.asList("TRISSER.server@gmail.com", "giaco.paltri@gmail.com", "abdullah.ali@einaudicorreggio.it")) {
@@ -30,6 +34,11 @@ public class MQTTPubPrint {
         }// list of users
 
         topics = getLinesFromFile("topics.txt");
+        String[] players = new String[2];
+        int bot_number; // attento, il numero deve essere diviso per il numero di bot
+        String time = String.valueOf(rules.get(0).get("bot_number"));
+        bot_number = Integer.parseInt(String.valueOf(rules.get(0).get("bot_number")));
+        for (int i = 0; i < topics.size(); i++) rooms.add(new gameInstance(topics.get(i), bot_number, time));
 
         try {
             int qos = 1;
@@ -59,6 +68,12 @@ public class MQTTPubPrint {
                     String user;
                         // controlla le topic, cambia online perchè devi riconoscere l'user
                     if(!Objects.isNull(json.containsKey("move"))){
+                        if (topics.contains(gameInstance.subStringTopic(topic, "/", getTOPIC)));
+                        {
+                            for (int i = 0; i < topics.size(); i++){
+
+                            }
+                        }
 
                     }else if (!Objects.isNull(json.get("online")) && topic.contains("online/")){
                         user = topic.replace("online/", "");
@@ -74,12 +89,12 @@ public class MQTTPubPrint {
             sampleClient.subscribe("online/#"); //Listen to online topics
             System.out.println("Connected");
 
-            ArrayList<JSONObject> rules = getJSONfromFile("rules.txt");
-            int time;
-            time = Integer.parseInt(String.valueOf(rules.get(0).get("connection_time")));
-            time = time*1000; // conversion in seconds
+            rules = getJSONfromFile("rules.txt");
+            int connection_time;
+            connection_time = Integer.parseInt(String.valueOf(rules.get(0).get("connection_time")));
+            connection_time = connection_time*1000; // conversion in seconds
 
-            int finalTime = time;
+            int finalTime = connection_time;
             startMethodAfterNMilliseconds(new Runnable() {
                 @Override
                 public void run() {
@@ -94,7 +109,7 @@ public class MQTTPubPrint {
                         e.printStackTrace();
                     }
                 }
-            }, time); // connection time is over
+            }, connection_time); // connection time is over
 
 //            String topic = "online/dalterio.dario@einaudicorreggio.it";
 //            String msg = "True";

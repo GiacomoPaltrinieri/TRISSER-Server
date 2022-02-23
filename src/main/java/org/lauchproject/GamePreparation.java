@@ -32,7 +32,7 @@ public class GamePreparation {
         timer.schedule(new MyTimeTask(), date);
     }
 
-    private static String getGameTime() {
+    public static String getGameTime() {
         try{
             String separator = System.getProperty("file.separator");
             String path = ".." + separator + "time.txt";
