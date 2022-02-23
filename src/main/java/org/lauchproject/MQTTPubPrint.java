@@ -12,12 +12,13 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static org.lauchproject.gameInstance.getTOPIC;
+import static org.lauchproject.gameInstance.*;
 
 public class MQTTPubPrint {
 
@@ -68,10 +69,12 @@ public class MQTTPubPrint {
                     String user;
                         // controlla le topic, cambia online perchè devi riconoscere l'user
                     if(!Objects.isNull(json.containsKey("move"))){
-                        if (topics.contains(gameInstance.subStringTopic(topic, "/", getTOPIC)));
+                        if (topics.contains(subStringTopic(topic, "/", getTOPIC)));
                         {
                             for (int i = 0; i < topics.size(); i++){
-
+                                if (subStringTopic(topic, "/", getTOPIC).equals(rooms.get(i).getTopic())){
+                                    rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getUSER),Integer.parseInt((String) json.get("move")));
+                                }
                             }
                         }
 

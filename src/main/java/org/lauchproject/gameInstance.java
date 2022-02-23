@@ -10,8 +10,8 @@ import static java.io.File.separator;
 /** This class describes every single room, it's players and everything related to all the games that have to played in that  **/
 public class gameInstance {
     public static final int getTOPIC=0;
-    public final int getINSTANCE=1;
-    public final int getUSER=2;
+    public static final int getINSTANCE=1;
+    public static final int getUSER=2;
     /** Attributes **/
     private String topic;
     private int room_number;
@@ -39,6 +39,18 @@ public class gameInstance {
                 rooms.add(new SingleRoom(i, obj, players[1]));
         }
 
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void makeAMove(int instance, String player, int move){
+        for (int i = 0; i < rooms.size(); i++){
+            if (rooms.get(i).getRoomNumber() == instance){
+                rooms.get(i).makeMove(move, player);
+            }
+        }
     }
 
 //    /** Given a specific topic this function returns the user that has sent the message **/

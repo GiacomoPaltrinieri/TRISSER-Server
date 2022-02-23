@@ -82,6 +82,10 @@ public class SingleRoom {
         return false;
     }
 
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
     private void changePlayerToMove() {
         players.forEach((k,v) -> {
             if (!playerToMove.equals(k))
