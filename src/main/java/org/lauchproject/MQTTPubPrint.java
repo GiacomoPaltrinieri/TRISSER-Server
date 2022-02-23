@@ -92,9 +92,6 @@ public class MQTTPubPrint {
                 }
             }, time); // connection time is over
 
-
-
-
 //            String topic = "online/dalterio.dario@einaudicorreggio.it";
 //            String msg = "True";
 //            MqttMessage message = new MqttMessage(msg.getBytes());

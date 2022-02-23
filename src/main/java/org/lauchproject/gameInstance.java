@@ -24,19 +24,20 @@ public class gameInstance {
     public gameInstance(String[] players, JSONArray rooms, String topic, int room_number, String time) {
         this.players = players;
         this.rooms = rooms;
-        this.topic = subStringTopic("/", getTOPIC);
+        this.topic = subStringTopic(topic, "/", getTOPIC);
+        this.room_number = room_number;
 
-        players[0] = subStringTopic("_", 0);
-        players[1] = subStringTopic("_", 1);
+        players[0] = subStringTopic(this.topic, "_", 0); // first player
+        players[1] = subStringTopic(this.topic, "_", 1); //second player
 
         JSONObject obj = new JSONObject();
         for (int i = 0; i < this.room_number; i++){
             obj.clear();
-            obj.put(players[0], time);
-            obj.put(players[1], time);
-            if (i%2==0)
+            obj.put(players[0], new StopWatchTimer(Integer.parseInt(time)));
+            obj.put(players[1], new StopWatchTimer(Integer.parseInt(time)));
+            if (i%2==0) // if the instance number is not odd the first player to move will be player[0]
                 rooms.add(new SingleRoom(i, obj, players[0]));
-            else
+            else // if the instance number is odd the first player to move will be player[1]
                 rooms.add(new SingleRoom(i, obj, players[1]));
         }
 
@@ -51,11 +52,11 @@ public class gameInstance {
 //    }
 
     /** subtracts data from the topic **/
-    public String subStringTopic(String splitChars, int index){
+    public String subStringTopic(String string, String splitChars, int index){
         //index = getTOPIC || (0) -> topic
         //index = getINSTANCE || (1) -> instance
         //index = getUSER || (2) -> user
-        String[] parts = topic.split(splitChars);
+        String[] parts = string.split(splitChars);
         return parts[index];
     }
 }
