@@ -21,12 +21,15 @@ public class MQTTPubPrint {
 
     public JSONObject onlineUsers = new JSONObject();
     ArrayList<gameInstance> instances = new ArrayList(); // list of every topic
+    private ArrayList<String> topics = new ArrayList<>();
 
     public MQTTPubPrint() {
 
         for (String s : Arrays.asList("TRISSER.server@gmail.com", "giaco.paltri@gmail.com", "abdullah.ali@einaudicorreggio.it")) {
             onlineUsers.put(s, false);
         }// list of users
+
+        topics = getLinesFromFile("topics.txt");
 
         try {
             int qos = 1;
@@ -55,8 +58,8 @@ public class MQTTPubPrint {
                     JSONObject json = (JSONObject) parser.parse(msg);
                     String user;
                         // controlla le topic, cambia online perchè devi riconoscere l'user
-                    if(!Objects.isNull(json.get("move"))){
-                        System.out.println(json.get("move"));
+                    if(!Objects.isNull(json.containsKey("move"))){
+
                     }else if (!Objects.isNull(json.get("online")) && topic.contains("online/")){
                         user = topic.replace("online/", "");
                         onlineUsers.replace(user, true); //user is online
@@ -83,6 +86,7 @@ public class MQTTPubPrint {
                     // myMethod(); // Your method goes here.
                     try {
                         sampleClient.unsubscribe("online/#");
+                        sampleClient.subscribe("#"); // now moves can be sent
                         System.out.println(finalTime);
                         checkForNotConnected(onlineUsers);
                         System.out.println(onlineUsers.toString());
@@ -107,6 +111,19 @@ public class MQTTPubPrint {
             System.out.println("Exception :"+ me);
             me.printStackTrace();
         }
+    }
+
+    private ArrayList<String> getLinesFromFile(String path) {
+        File file = new File(path);
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            Scanner line = new Scanner(file);
+            while (line.hasNext())
+                list.add(line.nextLine());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     private static void checkForNotConnected(JSONObject onlineUsers) {

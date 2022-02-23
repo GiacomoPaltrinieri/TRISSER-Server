@@ -279,5 +279,12 @@ public class GameSettings {
         ArrayList<String> rulesList = new ArrayList<>();
         rulesList.add(rules.toString());
         writeToFile(path, rulesList, false);
+
+        path = "topics.txt"; // writes topics in a file
+        ArrayList<String> topicsList = new ArrayList<>();
+        topicsList.add(rules.toString());
+        for (String s : topics)
+            topicsList.add(s);
+        writeToFile(path, topicsList, false);
     }
 }
