@@ -15,7 +15,7 @@
                 <div class="container" >
                     <input type="number" placeholder="NUMERO BOT" name="bot_num" class="myin" onchange="create_input()">
                     <div id="input_cont">
-
+                        <!-- INPUT TAG IS ADDED BY THE JS SCRIPT-->
                     </div>
                 </div>
 

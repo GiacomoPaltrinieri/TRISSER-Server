@@ -44,6 +44,8 @@ public class My_servlet extends HttpServlet{
 
         /**new GameSettings(rules,users);**/
 
+        request.setAttribute("logs","THIS WILL BE A LOG");
+
        // out.println("<h2>Dati ricevuti</h2>");
         //out.println("<h2>HY GREG</h2>");
 

@@ -18,19 +18,31 @@ function take_values(){
     http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     http.send(data);
 
+    console.log(http.responseText);
+    //print_log(http.responseText);
+
     return false;
 
 }
+
+
 
 /**Function to create Multiple input tags for the email input**/
 
 function create_input(){
     var cont=document.forms["myform"]["bot_num"].value;
-    console.log("contatore-->",cont)
     var container=document.getElementById("input_cont")
     container.innerHTML="";
     var name="email_";
     for (i=0;i<cont;i++){
         container.innerHTML=container.innerHTML+ '<input type="email" placeholder="EMAIL" name='+name+i+' class="myin">';
     }
+}
+
+
+/**Function to print logs on the gui**/
+function print_log(log){
+    //need a function in the backend tha send me the string to print.
+    // function Return String-->myServlet.response-->print_log.js
+    console.log(log);
 }
