@@ -78,7 +78,6 @@ public class MQTTPubPrint {
                                     }
                                 }
                             }
-
                         }else if (!Objects.isNull(json.get("online")) && topic.contains("online/")){
                             user = topic.replace("online/", "");
                             onlineUsers.replace(user, true); //user is online
@@ -109,6 +108,11 @@ public class MQTTPubPrint {
                         sampleClient.subscribe("#"); // now moves can be sent
                         System.out.println(finalTime);
                         checkForNotConnected(onlineUsers);
+                        String topic = "broadcast";
+                        String msg = "{\"game\":\"start\"}";
+                        MqttMessage message = new MqttMessage(msg.getBytes());
+                        message.setQos(qos);
+                        sampleClient.publish(topic, message);
                         System.out.println(onlineUsers.toString());
                     } catch (MqttException e) {
                         e.printStackTrace();

@@ -79,7 +79,7 @@ public class SingleRoom {
             temp = temp + playerMoves.get(i);
 
         for (int i = 0; i < winningMoves.size(); i++)
-            if (temp.equals(winningMoves.get(i)))
+            if (winningMoves.get(i).contains(temp)) // maybe
                 return true;
         return false;
     }
