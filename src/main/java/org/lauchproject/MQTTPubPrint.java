@@ -65,23 +65,25 @@ public class MQTTPubPrint {
                     //System.out.println(topic + " says: \n" + message.toString());
                     String msg = message.toString();
                     JSONParser parser = new JSONParser();
-                    JSONObject json = (JSONObject) parser.parse(msg);
-                    String user;
+                    if (IsJson.isJSONValid(msg)){
+                        JSONObject json = (JSONObject) parser.parse(msg);
+                        String user;
                         // controlla le topic, cambia online perchè devi riconoscere l'user
-                    if(!Objects.isNull(json.containsKey("move"))){
-                        if (topics.contains(subStringTopic(topic, "/", getTOPIC)));
-                        {
-                            for (int i = 0; i < topics.size(); i++){
-                                if (subStringTopic(topic, "/", getTOPIC).equals(rooms.get(i).getTopic())){
-                                    rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getUSER),Integer.parseInt((String) json.get("move")));
+                        if(!Objects.isNull(json.containsKey("move"))){
+                            if (topics.contains(subStringTopic(topic, "/", getTOPIC)));
+                            {
+                                for (int i = 0; i < topics.size(); i++){
+                                    if (subStringTopic(topic, "/", getTOPIC).equals(rooms.get(i).getTopic())){
+                                        rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getUSER),Integer.parseInt((String) json.get("move")));
+                                    }
                                 }
                             }
-                        }
 
-                    }else if (!Objects.isNull(json.get("online")) && topic.contains("online/")){
-                        user = topic.replace("online/", "");
-                        onlineUsers.replace(user, true); //user is online
-                        System.out.println(user + " True");
+                        }else if (!Objects.isNull(json.get("online")) && topic.contains("online/")){
+                            user = topic.replace("online/", "");
+                            onlineUsers.replace(user, true); //user is online
+                            System.out.println(user + " True");
+                        }
                     }
                 }
 

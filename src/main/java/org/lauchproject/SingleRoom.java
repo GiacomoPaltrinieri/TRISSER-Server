@@ -10,7 +10,7 @@ public class SingleRoom {
 
     /** Attributes **/
     private int roomNumber; // mail1_mail2/38 -> roomNumber=38
-    private JSONObject players; // players and time remaining
+    private StopWatchTimer[] timers = new StopWatchTimer[2];
     private ArrayList<Integer> moves = new ArrayList<>(); // list of moves that have been made
     private String playerToMove; //name of the player that has to move
     private String winner; // the name of the winning bot
@@ -18,9 +18,9 @@ public class SingleRoom {
     public static ArrayList<String> winningMoves = new ArrayList<>(Arrays.asList("147", "258", "369", "123", "456", "789", "159", "357"));
 
     /** Constructor **/
-    public SingleRoom(int roomNumber, JSONObject players, String playerToMove) {
+    public SingleRoom(int roomNumber, StopWatchTimer[] timers, String playerToMove) {
         this.roomNumber = roomNumber;
-        this.players = players;
+        this.timers = timers;
         this.playerToMove = playerToMove;
     }
 
@@ -56,6 +56,8 @@ public class SingleRoom {
         return moves;
     }
 
+
+
     private boolean isWinning(int move) {
         int oddOrNot = 0;
         ArrayList<Integer> playerMoves = new ArrayList<>();
@@ -86,13 +88,18 @@ public class SingleRoom {
         return roomNumber;
     }
 
-    private void changePlayerToMove() {
-        players.forEach((k,v) -> {
-            if (!playerToMove.equals(k))
-                temp = (String) k;
-        });
-        playerToMove = temp;
+    private String changePlayerToMove() {
+        int t = 0;
+        for (int i = 0; i <= 1; i++){
+            if (!timers[i].getPlayer().equals(playerToMove) && t == 0){ //
+                t++;
+                playerToMove = timers[i].getPlayer();
+                timers[i].stop();
+                if (timers[i].getTime(StopWatchTimer.SECONDS) <= 0)
+                    return timers[i].getPlayer() ;
+            }else
+                timers[i].start();
+        }
+        return "";
     }
-
-
 }
