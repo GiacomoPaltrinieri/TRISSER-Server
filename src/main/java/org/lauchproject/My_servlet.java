@@ -46,7 +46,9 @@ public class My_servlet extends HttpServlet{
         //request.setAttribute("logs","THIS WILL BE A LOG");
 
         PrintWriter out = response.getWriter();
-        out.write("this is a log");
+        for(i=0;i<10;i++){
+            out.write("this is log numebr= "+i+"\n");
+        }
 
        // out.println("<h2>Dati ricevuti</h2>");
         //out.println("<h2>HY GREG</h2>");

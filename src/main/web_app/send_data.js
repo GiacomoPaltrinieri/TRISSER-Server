@@ -14,11 +14,23 @@ function take_values(){
 
     var http = new XMLHttpRequest();
 
+    http.onreadystatechange = function() {
+        if (http.readyState === 4) {
+            var callback=(http.response);
+            var textarea=document.getElementById("log");
+            textarea.innerHTML="";
+
+            console.log(callback)
+            textarea.innerHTML+=callback;
+
+        }
+    }
+
     http.open("POST", "http://localhost:8080/TRISSER_main_war_exploded/MyServlet", true);
     http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     http.send(data);
 
-    console.log(http.responseText);
+   // console.log(http.responseText);
     //print_log(http.responseText);
 
     return false;
