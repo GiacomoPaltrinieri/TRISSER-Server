@@ -23,11 +23,13 @@ import static org.lauchproject.gameInstance.*;
 public class MQTTPubPrint {
 
     public JSONObject onlineUsers = new JSONObject();
+    public static final int qos = 1;
     ArrayList<gameInstance> instances = new ArrayList(); // list of every topic
     private ArrayList<String> topics = new ArrayList<>();
-    private ArrayList<gameInstance> rooms = new ArrayList<>();
+    private static ArrayList<gameInstance> rooms = new ArrayList<>();
     private ArrayList<JSONObject> rules = getJSONfromFile("rules.txt");
     private String time;
+    private static MqttClient sampleClient;
     public MQTTPubPrint() {
 
         for (String s : Arrays.asList("TRISSER.server@gmail.com", "giaco.paltri@gmail.com", "abdullah.ali@einaudicorreggio.it")) {
@@ -42,12 +44,12 @@ public class MQTTPubPrint {
         for (int i = 0; i < topics.size(); i++) rooms.add(new gameInstance(topics.get(i), bot_number, time));
 
         try {
-            int qos = 1;
+
             String broker = "tcp://localhost:1883";
             String PubId = "127.0.0.1";
 
             MemoryPersistence persistence = new MemoryPersistence();
-            MqttClient sampleClient = new MqttClient(broker, PubId, persistence);
+            sampleClient = new MqttClient(broker, PubId, persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
             connOpts.setConnectionTimeout(60);
@@ -61,28 +63,27 @@ public class MQTTPubPrint {
                 public void connectionLost(Throwable cause) {}
 
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
-
                     //System.out.println(topic + " says: \n" + message.toString());
                     String msg = message.toString();
                     JSONParser parser = new JSONParser();
-                    if (IsJson.isJSONValid(msg)){
-                        JSONObject json = (JSONObject) parser.parse(msg);
-                        String user;
-                        // controlla le topic, cambia online perchè devi riconoscere l'user
-                        if(!Objects.isNull(json.containsKey("move"))){
-                            if (topics.contains(subStringTopic(topic, "/", getTOPIC)));
-                            {
-                                for (int i = 0; i < topics.size(); i++){
-                                    if (subStringTopic(topic, "/", getTOPIC).equals(rooms.get(i).getTopic())){
-                                        rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getUSER),Integer.parseInt((String) json.get("move")));
-                                    }
+                    JSONObject json = (JSONObject) parser.parse(msg);
+                    String user;
+                    // controlla le topic, cambia online perchè devi riconoscere l'user
+                    if(!Objects.isNull(json) && json.containsKey("move")){
+                        System.out.println("ma boh");
+                        if (topics.contains(subStringTopic(topic, "/", getTOPIC)));
+                        {
+                            for (int i = 0; i < topics.size(); i++){
+                                if (subStringTopic(topic, "/", getTOPIC).equals(rooms.get(i).getTopic())){
+                                    rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getUSER),Integer.parseInt((String) json.get("move")));
                                 }
                             }
-                        }else if (!Objects.isNull(json.get("online")) && topic.contains("online/")){
-                            user = topic.replace("online/", "");
-                            onlineUsers.replace(user, true); //user is online
-                            System.out.println(user + " True");
                         }
+                    }else if (topic.contains("online/")){
+                        user = topic.replace("online/", "");
+                        System.out.println("ciaoooooo");
+                        onlineUsers.replace(user, true); //user is online
+                        System.out.println(user + " True");
                     }
                 }
 
@@ -152,11 +153,27 @@ public class MQTTPubPrint {
 
     private static void checkForNotConnected(JSONObject onlineUsers) {
        onlineUsers.forEach((key, value) -> {
+           System.out.println("userino : " + key);
            if (value.toString().equals("false")) notConnected(key.toString()); //value == false, client not connected
        });
     }
 
-    private static void notConnected(String toString) {
+    private static void notConnected(String user) {
+        System.out.println("ciao");
+        for (int i = 0; i < rooms.size(); i ++)
+            if (rooms.get(i).isPlayedBy(user)){
+                rooms.get(i).hasLost(user);
+                String topic = "broadcast";
+                JSONObject obj = new JSONObject();
+                obj.put("not_connected", user);
+                MqttMessage msg = new MqttMessage(obj.toString().getBytes(StandardCharsets.UTF_8));
+                msg.setQos(qos);
+                try {
+                    sampleClient.publish(topic, msg);
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+            }
 
     }
 
@@ -183,10 +200,6 @@ public class MQTTPubPrint {
         return json;
     }
 
-    JSONArray userInfo = GameSettings.fileToJsonArray("userInfo"); // fetch all informations about users and rules
-
-   JSONObject user = (JSONObject) userInfo.get(0);
-
     /** This function waits for a specific time to execute a specific function **/
     public static void startMethodAfterNMilliseconds(Runnable runnable, int milliSeconds) {
         Timer timer = new Timer(milliSeconds, new ActionListener() {
@@ -197,5 +210,9 @@ public class MQTTPubPrint {
         });
         timer.setRepeats(false); // Only execute once
         timer.start();
+    }
+
+    public static void main(String[] args) {
+        new MQTTPubPrint();
     }
 }

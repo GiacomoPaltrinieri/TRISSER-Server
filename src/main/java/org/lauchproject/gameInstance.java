@@ -16,7 +16,7 @@ public class gameInstance {
     private String topic;
     private int room_number;
     private String[] players = new String[2]; // players involved in this room
-    private ArrayList<SingleRoom>  rooms = new ArrayList<>(); // all the rooms (room_number, ArrayList moves, userMove)
+    private ArrayList<SingleRoom>  single_rooms = new ArrayList<>(); // all the single_rooms (room_number, ArrayList moves, userMove)
     private StopWatchTimer timers[] = new StopWatchTimer[2];
 
     /** Methods **/
@@ -33,9 +33,9 @@ public class gameInstance {
         timers[1] = new StopWatchTimer(Integer.parseInt(time), players[1]);
         for (int i = 0; i < this.room_number; i++){
             if (i%2==0) // if the instance number is not odd the first player to move will be player[0]
-                rooms.add(new SingleRoom(i, timers, players[0]));
+                single_rooms.add(new SingleRoom(i, timers, players[0]));
             else // if the instance number is odd the first player to move will be player[1]
-                rooms.add(new SingleRoom(i, timers, players[1]));
+                single_rooms.add(new SingleRoom(i, timers, players[1]));
         }
 
     }
@@ -45,9 +45,9 @@ public class gameInstance {
     }
 
     public void makeAMove(int instance, String player, int move){
-        for (int i = 0; i < rooms.size(); i++){
-            if (rooms.get(i).getRoomNumber() == instance){
-                rooms.get(i).makeMove(move, player);
+        for (int i = 0; i < single_rooms.size(); i++){
+            if (single_rooms.get(i).getRoomNumber() == instance){
+                single_rooms.get(i).makeMove(move, player);
             }
         }
     }
@@ -67,5 +67,20 @@ public class gameInstance {
         //index = getUSER || (2) -> user
         String[] parts = string.split(splitChars);
         return parts[index];
+    }
+
+    public boolean isPlayedBy(String user) {
+        if (topic.contains(user))
+            return true;
+        return false;
+    }
+
+    public void hasLost(String user) {
+        String winner = topic.replace("_", "");
+        winner = winner.replace(user, "");
+        
+        for (int i = 0; i < single_rooms.size(); i ++){
+            single_rooms.get(i).setWinner(winner);
+        }
     }
 }

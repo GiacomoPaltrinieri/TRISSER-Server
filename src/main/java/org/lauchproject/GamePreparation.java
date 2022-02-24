@@ -35,7 +35,7 @@ public class GamePreparation {
     public static String getGameTime() {
         try{
             String separator = System.getProperty("file.separator");
-            String path = ".." + separator + "time.txt";
+            String path = "time.txt";
             File file = new File(path);
             FileReader  fr= new FileReader(file);
             BufferedReader br = new BufferedReader(fr);

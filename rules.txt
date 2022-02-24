@@ -1,1 +1,1 @@
-{"date":"2002-08-22 15:30:22","connection_time":20,"time":20,"bot_number":150}
+{"date":"2002-08-22 15:30:22","connection_time":20,"time":5,"bot_number":150}

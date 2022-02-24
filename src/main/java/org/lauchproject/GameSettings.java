@@ -109,6 +109,11 @@ public class GameSettings {
         }
         FileWriter fw = null;
         try {
+            fw = new FileWriter(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
             fw = new FileWriter(file.getAbsoluteFile(), append);
         } catch (IOException e) {
             System.out.println("something went wrong while starting the FileWriter");
@@ -282,7 +287,6 @@ public class GameSettings {
 
         path = "topics.txt"; // writes topics in a file
         ArrayList<String> topicsList = new ArrayList<>();
-        topicsList.add(rules.toString());
         for (String s : topics)
             topicsList.add(s);
         writeToFile(path, topicsList, false);

@@ -102,4 +102,8 @@ public class SingleRoom {
         }
         return "";
     }
+
+    public void setWinner(String winner) {
+        this.winner=winner;
+    }
 }
