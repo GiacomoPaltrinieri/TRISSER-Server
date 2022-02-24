@@ -17,8 +17,7 @@ public class My_servlet extends HttpServlet{
         response.setContentType("text/html");
         // Hello
         //test commit ali not working github
-        //PrintWriter out = response.getWriter();
-        //out.println("<h3>Rule selected!</h3>");
+
 
         String bot_num=request.getParameter("bot_num");
         String temp_gioco_bot=request.getParameter("temp_gioco_bot");
@@ -44,7 +43,10 @@ public class My_servlet extends HttpServlet{
 
         /**new GameSettings(rules,users);**/
 
-        request.setAttribute("logs","THIS WILL BE A LOG");
+        //request.setAttribute("logs","THIS WILL BE A LOG");
+
+        PrintWriter out = response.getWriter();
+        out.write("this is a log");
 
        // out.println("<h2>Dati ricevuti</h2>");
         //out.println("<h2>HY GREG</h2>");
