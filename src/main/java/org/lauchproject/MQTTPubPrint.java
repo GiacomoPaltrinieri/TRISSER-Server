@@ -11,7 +11,6 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -175,6 +174,14 @@ public class MQTTPubPrint {
                 }
             }
 
+    }
+
+    public static void removeTopic(String topic){
+        try {
+            sampleClient.unsubscribe(topic);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     /** Returns an ArrayList containing JsonObjects given a specific file **/

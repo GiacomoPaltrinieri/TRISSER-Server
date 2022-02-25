@@ -39,6 +39,7 @@ public class SingleRoom {
                 moves.add(move);
                 if (isWinning(move)){
                     System.out.println(playerToMove + " has won");
+                    setWinner(playerToMove);
                 }else if (moves.size() == 9){
                     System.out.println("no one has won (pareggio)");
                 }
@@ -57,7 +58,7 @@ public class SingleRoom {
     }
 
 
-
+    /** returns true if the player has won, false if the game is still running **/
     private boolean isWinning(int move) {
         int oddOrNot = 0;
         ArrayList<Integer> playerMoves = new ArrayList<>();
@@ -73,14 +74,16 @@ public class SingleRoom {
                 playerMoves.add(moves.get(i));
         Collections.sort(playerMoves);
         System.out.println(playerMoves);
-
-        temp="";
-        for (int i = 0; i < playerMoves.size(); i++)
-            temp = temp + playerMoves.get(i);
-
-        for (int i = 0; i < winningMoves.size(); i++)
-            if (winningMoves.get(i).contains(temp)) // maybe
-                return true;
+        boolean win;
+        for (int i = 0; i < playerMoves.size(); i++){
+            win = true;
+            for (int j = 0; j < winningMoves.size(); j++){
+                if (!winningMoves.get(i).contains(playerMoves.get(i).toString()))
+                    win = false;
+                if (win == true)
+                    return true;
+            }
+        }
         return false;
     }
 
