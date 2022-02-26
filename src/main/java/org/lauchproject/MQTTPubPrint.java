@@ -108,11 +108,7 @@ public class MQTTPubPrint {
                         sampleClient.subscribe("#"); // now moves can be sent
                         System.out.println(finalTime);
                         checkForNotConnected(onlineUsers);
-                        String topic = "broadcast";
-                        String msg = "{\"game\":\"start\"}";
-                        MqttMessage message = new MqttMessage(msg.getBytes());
-                        message.setQos(qos);
-                        sampleClient.publish(topic, message);
+                        sendMessage("broadcast", "{\"game\":\"start\"}");
                         System.out.println(onlineUsers.toString());
                     } catch (MqttException e) {
                         e.printStackTrace();
@@ -134,6 +130,16 @@ public class MQTTPubPrint {
             System.out.println("Cause :"+ me.getCause());
             System.out.println("Exception :"+ me);
             me.printStackTrace();
+        }
+    }
+
+    public static void sendMessage(String topic, String msg) {
+        MqttMessage message = new MqttMessage(msg.getBytes());
+        message.setQos(qos);
+        try {
+            sampleClient.publish(topic, message);
+        } catch (MqttException e) {
+            e.printStackTrace();
         }
     }
 
@@ -162,16 +168,9 @@ public class MQTTPubPrint {
         for (int i = 0; i < rooms.size(); i ++)
             if (rooms.get(i).isPlayedBy(user)){
                 rooms.get(i).hasLost(user);
-                String topic = "broadcast";
                 JSONObject obj = new JSONObject();
                 obj.put("not_connected", user);
-                MqttMessage msg = new MqttMessage(obj.toString().getBytes(StandardCharsets.UTF_8));
-                msg.setQos(qos);
-                try {
-                    sampleClient.publish(topic, msg);
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
+                sendMessage("broadcast", obj.toString());
             }
 
     }

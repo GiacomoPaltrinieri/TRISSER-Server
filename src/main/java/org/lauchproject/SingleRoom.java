@@ -24,12 +24,14 @@ public class SingleRoom {
         this.playerToMove = playerToMove;
     }
 
-    public void makeMove(int move, String user) {
+    public void makeMove(int move, String user, String topic) {
         if (user.equals(playerToMove)){
             // user turn to move
             if (moves.contains(move)){
                 System.out.println("move already done");
             }else if(move > 9 || move < 1){
+                //ADD MESSAGE ERROR
+                MQTTPubPrint.sendMessage(topic+"/"+roomNumber, "{\"error\":" + "\"" + moves.toArray() + "\"," + "player:" + "\"" + playerToMove + "\"}");
                 System.out.println("invalid move");
             } else if(moves.size()<=5){
                 moves.add(move);
@@ -37,11 +39,12 @@ public class SingleRoom {
                 System.out.println("numero di mosse insufficienti per vincere, mossa valida");
             }else{
                 moves.add(move);
-                if (isWinning(move)){
+                if (isWinning()){
                     System.out.println(playerToMove + " has won");
                     setWinner(playerToMove);
                 }else if (moves.size() == 9){
                     System.out.println("no one has won (pareggio)");
+                    setWinner("none");
                 }
                  else{
                     changePlayerToMove();
@@ -59,7 +62,7 @@ public class SingleRoom {
 
 
     /** returns true if the player has won, false if the game is still running **/
-    private boolean isWinning(int move) {
+    private boolean isWinning() {
         int oddOrNot = 0;
         ArrayList<Integer> playerMoves = new ArrayList<>();
         if (moves.size()%2 == 0)
