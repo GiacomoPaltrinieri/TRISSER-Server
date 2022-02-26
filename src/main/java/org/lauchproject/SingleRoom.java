@@ -1,7 +1,5 @@
 package org.lauchproject;
 
-import org.json.simple.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -111,5 +109,9 @@ public class SingleRoom {
 
     public void setWinner(String winner) {
         this.winner=winner;
+    }
+
+    public String getWinner() {
+        return this.winner;
     }
 }

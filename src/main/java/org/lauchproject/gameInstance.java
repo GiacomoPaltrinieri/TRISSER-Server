@@ -84,4 +84,8 @@ public class gameInstance {
             single_rooms.get(i).setWinner(winner);
         }
     }
+
+    public ArrayList<SingleRoom> getSingle_rooms() {
+        return single_rooms;
+    }
 }

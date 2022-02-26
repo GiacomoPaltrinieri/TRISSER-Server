@@ -23,16 +23,17 @@ public class MQTTPubPrint {
 
     public JSONObject onlineUsers = new JSONObject();
     public static final int qos = 1;
-    ArrayList<gameInstance> instances = new ArrayList(); // list of every topic
     private ArrayList<String> topics = new ArrayList<>();
     private static ArrayList<gameInstance> rooms = new ArrayList<>();
     private ArrayList<JSONObject> rules = getJSONfromFile("rules.txt");
-    private String time;
     private static MqttClient sampleClient;
+    private ArrayList<PlayerPoints> playerWins = new ArrayList<>();
+
     public MQTTPubPrint() {
 
         for (String s : Arrays.asList("TRISSER.server@gmail.com", "giaco.paltri@gmail.com", "abdullah.ali@einaudicorreggio.it")) {
             onlineUsers.put(s, false);
+            playerWins.add(new PlayerPoints(s));
         }// list of users
 
         topics = getLinesFromFile("topics.txt");
@@ -109,6 +110,14 @@ public class MQTTPubPrint {
                         System.out.println(finalTime);
                         checkForNotConnected(onlineUsers);
                         sendMessage("broadcast", "{\"game\":\"start\"}");
+                        int time = Integer.parseInt(String.valueOf(rules.get(0).get("time")));
+                        time = time*1000;
+                        startMethodAfterNMilliseconds(new Runnable() {
+                            @Override
+                            public void run() {
+                                gameOver();
+                            }
+                        }, time);
                         System.out.println(onlineUsers.toString());
                     } catch (MqttException e) {
                         e.printStackTrace();
@@ -131,6 +140,36 @@ public class MQTTPubPrint {
             System.out.println("Exception :"+ me);
             me.printStackTrace();
         }
+    }
+
+    private void gameOver() {
+        for (int i = 0; i < rooms.size(); i++){ // scorro ogni topic
+            for (int j = 0; j < rooms.get(i).getSingle_rooms().size(); j++){
+                addPoint(rooms.get(i).getSingle_rooms().get(i).getWinner());
+            }
+        }
+
+        PlayerPoints temp;
+        for (int i = 0; i < playerWins.size(); i++){
+            temp = playerWins.get(i);
+            for (int j = i; j < playerWins.size(); j++){
+                if (playerWins.get(j).getWins() > temp.getWins())
+                    playerWins.set(i, playerWins.get(j));
+                    playerWins.set(j, temp);
+                    temp = playerWins.get(i);
+            }
+        }
+        JSONObject obj = new JSONObject();
+        for (int i = 0; i < playerWins.size(); i++)
+            obj.put(i, playerWins.get(i).getPlayer());
+        sendMessage("broadcast", obj.toString());
+
+    }
+
+    private void addPoint(String user){
+        for (int i = 0; i < playerWins.size(); i++)
+            if (playerWins.get(i).getPlayer().equals(user))
+                playerWins.get(i).addPoint();
     }
 
     public static void sendMessage(String topic, String msg) {
