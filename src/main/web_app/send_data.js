@@ -21,7 +21,7 @@ function take_values(){
             textarea.innerHTML="";
 
             console.log(callback)
-            textarea.innerHTML+=callback;
+            textarea.innerHTML=textarea.innerHTML+callback;
 
         }
     }
@@ -30,8 +30,6 @@ function take_values(){
     http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     http.send(data);
 
-   // console.log(http.responseText);
-    //print_log(http.responseText);
 
     return false;
 

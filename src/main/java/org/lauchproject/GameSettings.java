@@ -261,7 +261,7 @@ public class GameSettings {
     }
 
     /** Main method **/
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         ArrayList<String> users = new ArrayList<>();
         JSONObject rules = new JSONObject();
         rules.put("time", 20);
@@ -290,5 +290,5 @@ public class GameSettings {
         for (String s : topics)
             topicsList.add(s);
         writeToFile(path, topicsList, false);
-    }
+    }*/
 }

@@ -2,12 +2,11 @@ package org.lauchproject;
 
 import com.google.gson.Gson;
 
-
 public final class IsJson {
 
     private static final Gson gson = new Gson();
 
-    private IsJson(){}
+    public IsJson(){}
 
     public static boolean isJSONValid(String jsonInString) {
 
@@ -26,12 +25,5 @@ public final class IsJson {
             return false;
         }
     }
-
-    //The main was for test Purpose
-    /*public static void main(String[] args){
-        System.out.println(isJSONValid("[\"Ford\", \"BMW\", \"Fiat\"]"));
-    }*/
-
-
 
 }

@@ -1,23 +1,19 @@
 package org.lauchproject;
 
 import org.json.simple.JSONObject;
-
 import java.io.*;
 import java.util.ArrayList;
-import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
+
 @WebServlet(name = "MyServlet",value ="/MyServlet")
-//@MultipartConfig
 public class My_servlet extends HttpServlet{
+    private static ArrayList<String> logs=new ArrayList<>();
 
     @Override
-    protected void  doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
-        // Hello
-        //test commit ali not working github
-
 
         String bot_num=request.getParameter("bot_num");
         String temp_gioco_bot=request.getParameter("temp_gioco_bot");
@@ -38,21 +34,18 @@ public class My_servlet extends HttpServlet{
             rules.put("date", data_start_game + " " + temp_start_game + ":00");
 
 
-        System.out.println(rules);
-        System.out.println(users);
-
-        /**new GameSettings(rules,users);**/
-
-        //request.setAttribute("logs","THIS WILL BE A LOG");
+        new GameSettings(rules,users);
 
         PrintWriter out = response.getWriter();
-        for(i=0;i<10;i++){
-            out.write("this is log numebr= "+i+"\n");
+        for (int j=0;j< logs.size();j++){
+            out.write(logs.get(j));
         }
 
-       // out.println("<h2>Dati ricevuti</h2>");
-        //out.println("<h2>HY GREG</h2>");
 
+    }
+
+    public static void getlog(String log){
+        logs.add(log);
     }
 
 
