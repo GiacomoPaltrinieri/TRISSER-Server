@@ -147,6 +147,7 @@ public class MQTTPubPrint {
         }
     }
 
+    /** Once gametime is over this function will generate the results and send them to the clients **/
     private void gameOver() {
         for (int i = 0; i < rooms.size(); i++){ // scorro ogni topic
             for (int j = 0; j < rooms.get(i).getSingle_rooms().size(); j++){
@@ -166,17 +167,18 @@ public class MQTTPubPrint {
         }
         JSONObject obj = new JSONObject();
         for (int i = 0; i < playerWins.size(); i++)
-            obj.put(i, playerWins.get(i).getPlayer());
+            obj.put(i+1, playerWins.get(i).getPlayer());
         sendMessage("broadcast", obj.toString());
-
     }
 
+    /** This function when called adds a point to a bot **/
     private void addPoint(String user){
         for (int i = 0; i < playerWins.size(); i++)
             if (playerWins.get(i).getPlayer().equals(user))
                 playerWins.get(i).addPoint();
     }
 
+    /** This function sends an MQTT message **/
     public static void sendMessage(String topic, String msg) {
         MqttMessage message = new MqttMessage(msg.getBytes());
         message.setQos(qos);
