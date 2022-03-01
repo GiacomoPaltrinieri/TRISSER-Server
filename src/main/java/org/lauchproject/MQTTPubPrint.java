@@ -63,28 +63,33 @@ public class MQTTPubPrint {
                 public void connectionLost(Throwable cause) {}
 
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    //System.out.println(topic + " says: \n" + message.toString());
+                    System.out.println(topic + " says: \n" + message.toString());
                     String msg = message.toString();
-                    JSONParser parser = new JSONParser();
-                    JSONObject json = (JSONObject) parser.parse(msg);
-                    String user;
-                    // controlla le topic, cambia online perchè devi riconoscere l'user
-                    if(!Objects.isNull(json) && json.containsKey("move")){
-                        System.out.println("ma boh");
-                        if (topics.contains(subStringTopic(topic, "/", getTOPIC)));
-                        {
-                            for (int i = 0; i < topics.size(); i++){
-                                if (subStringTopic(topic, "/", getTOPIC).equals(rooms.get(i).getTopic())){
-                                    rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getUSER),Integer.parseInt((String) json.get("move")));
+                    if (IsJson.isJSONValid(msg)){
+                        JSONParser parser = new JSONParser();
+                        JSONObject json = (JSONObject) parser.parse(msg);
+                        String user;
+                        // controlla le topic, cambia online perchè devi riconoscere l'user
+                        if(!Objects.isNull(json) && json.containsKey("move")){
+                            System.out.println("ma boh");
+                            if (topics.contains(subStringTopic(topic, "/", getTOPIC)));
+                            {
+                                for (int i = 0; i < topics.size(); i++){
+                                    if (subStringTopic(topic, "/", getTOPIC).equals(rooms.get(i).getTopic())){
+                                        rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getUSER),Integer.parseInt((String) json.get("move")));
+                                    }
                                 }
                             }
+                        }else if (topic.contains("online/")){
+                            user = topic.replace("online/", "");
+                            System.out.println("ciaoooooo");
+                            onlineUsers.replace(user, true); //user is online
+                            System.out.println(user + " True");
                         }
-                    }else if (topic.contains("online/")){
-                        user = topic.replace("online/", "");
-                        System.out.println("ciaoooooo");
-                        onlineUsers.replace(user, true); //user is online
-                        System.out.println(user + " True");
+                    }else{
+                        System.out.println("ERRORE; MESSAGGIO NON IN FORMATO JSON");
                     }
+
                 }
 
                 public void deliveryComplete(IMqttDeliveryToken token) {}
@@ -195,6 +200,7 @@ public class MQTTPubPrint {
         return list;
     }
 
+    /** This function checks whether a user is connected or not **/
     private static void checkForNotConnected(JSONObject onlineUsers) {
        onlineUsers.forEach((key, value) -> {
            System.out.println("userino : " + key);
@@ -202,6 +208,7 @@ public class MQTTPubPrint {
        });
     }
 
+    /** This function sends a message containing informations about not connected users to every connected user  **/
     private static void notConnected(String user) {
         System.out.println("ciao");
         for (int i = 0; i < rooms.size(); i ++)
@@ -214,6 +221,7 @@ public class MQTTPubPrint {
 
     }
 
+    /** Given a topic name this functions removes the topic from the listened topics **/
     public static void removeTopic(String topic){
         try {
             sampleClient.unsubscribe(topic);
