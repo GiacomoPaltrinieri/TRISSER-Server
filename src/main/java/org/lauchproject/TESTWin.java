@@ -11,9 +11,9 @@ public class TESTWin {
         arr.add(new PlayerPoints("ali"));
         arr.add(new PlayerPoints("greg"));
 
-        arr.get(0).setWins(3);
-        arr.get(1).setWins(8);
-        arr.get(2).setWins(1);
+        arr.get(0).setWins(7);
+        arr.get(1).setWins(12);
+        arr.get(2).setWins(3);
 
         for (int i = 0; i < arr.size(); i++)
             System.out.println(arr.get(i).returnValue());

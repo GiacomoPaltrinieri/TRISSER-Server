@@ -51,8 +51,8 @@ function create_input(){
 
 
 /**Function to print logs on the gui**/
-function print_log(log){
+/*function print_log(log){
     //need a function in the backend tha send me the string to print.
     // function Return String-->myServlet.response-->print_log.js
     console.log(log);
-}
+}*/
