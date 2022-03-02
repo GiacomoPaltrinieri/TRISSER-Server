@@ -9,7 +9,18 @@ import javax.servlet.annotation.*;
 
 @WebServlet(name = "MyServlet",value ="/MyServlet")
 public class My_servlet extends HttpServlet{
+    private static ArrayList<String> users=new ArrayList<>();
     private static ArrayList<String> logs=new ArrayList<>();
+    private static JSONObject rules = new JSONObject();
+
+    public static ArrayList<String> getUsers() {
+        return users;
+    }
+
+
+    public static JSONObject getRules() {
+        return rules;
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -22,12 +33,12 @@ public class My_servlet extends HttpServlet{
         String temp_start_game=request.getParameter("temp_start_game");
 
         int i=0;
-        ArrayList<String> users=new ArrayList<>();
+
         for (i=0;i<Integer.parseInt(bot_num);i++){
              users.add(request.getParameter("email_"+i));
         }
 
-        JSONObject rules = new JSONObject();
+
             rules.put("time", temp_gioco_bot);
             rules.put("bot_number", bot_num);
             rules.put("connection_time", temp_connessione);

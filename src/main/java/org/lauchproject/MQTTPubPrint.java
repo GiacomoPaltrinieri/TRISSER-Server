@@ -30,8 +30,8 @@ public class MQTTPubPrint {
     private ArrayList<PlayerPoints> playerWins = new ArrayList<>();
 
     public MQTTPubPrint() {
-
-        for (String s : Arrays.asList("TRISSER.server@gmail.com", "giaco.paltri@gmail.com", "abdullah.ali@einaudicorreggio.it")) {
+        GameSettings.startBroker();
+        for (String s : My_servlet.getUsers()) {
             onlineUsers.put(s, false);
             playerWins.add(new PlayerPoints(s));
         }// list of users

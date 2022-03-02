@@ -246,7 +246,6 @@ public class GameSettings {
     public GameSettings(JSONObject rules, ArrayList<String> users) {
         ArrayList<String> topics = setACLs(users);
         ArrayList<String> pwds = setPassword(users);
-        System.out.println(executeCommand("cd C:\\Program Files\\mosquitto\\ && Net start Mosquitto")); // Starts the mosquitto broker
         new MQTTPubPrint(); // test send message
         System.out.println(executeCommand("Taskkill /IM \"mosquitto.exe\" /F")); // Closes the mosquitto broker
         generateMailContent(users, topics, pwds, rules, 150);
@@ -259,7 +258,9 @@ public class GameSettings {
 
         writeToFile(path, ruleLine, false);
     }
-
+public static void startBroker(){
+    System.out.println(executeCommand("cd C:\\Program Files\\mosquitto\\ && Net start Mosquitto")); // Starts the mosquitto broker
+}
     /** Main method **/
    /* public static void main(String[] args) {
         ArrayList<String> users = new ArrayList<>();
