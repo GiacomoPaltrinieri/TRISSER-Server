@@ -151,7 +151,8 @@ public class MQTTPubPrint {
     private void gameOver() {
         for (int i = 0; i < rooms.size(); i++){ // scorro ogni topic
             for (int j = 0; j < rooms.get(i).getSingle_rooms().size(); j++){
-                addPoint(rooms.get(i).getSingle_rooms().get(i).getWinner());
+                if (j < rooms.get(i).getSingle_rooms().size())
+                    addPoint(rooms.get(i).getSingle_rooms().get(i).getWinner());
             }
         }
 
@@ -159,7 +160,7 @@ public class MQTTPubPrint {
         for (int i = 0; i < playerWins.size(); i++){
             temp = playerWins.get(i);
             for (int j = i; j < playerWins.size(); j++){
-                if (playerWins.get(j).getWins() > temp.getWins())
+                if (playerWins.get(j).getWins() > temp.getWins() && j < playerWins.size())
                     playerWins.set(i, playerWins.get(j));
                     playerWins.set(j, temp);
                     temp = playerWins.get(i);

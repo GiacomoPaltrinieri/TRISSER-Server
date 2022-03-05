@@ -17,7 +17,6 @@ public class My_servlet extends HttpServlet{
         return users;
     }
 
-
     public static JSONObject getRules() {
         return rules;
     }
@@ -45,11 +44,12 @@ public class My_servlet extends HttpServlet{
             rules.put("date", data_start_game + " " + temp_start_game + ":00");
 
 
-        new GameSettings(rules,users);
+        //new GameSettings(rules,users);
 
         PrintWriter out = response.getWriter();
         for (int j=0;j< logs.size();j++){
-            out.write(logs.get(j));
+            //out.write(logs.get(j));
+            out.write("Work In Progress!!");
         }
 
 
