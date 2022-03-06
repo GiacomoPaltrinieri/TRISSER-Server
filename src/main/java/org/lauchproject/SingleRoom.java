@@ -13,7 +13,7 @@ public class SingleRoom {
     private String playerToMove; //name of the player that has to move
     private String winner; // the name of the winning bot
     private String temp;
-    public static ArrayList<String> winningMoves = new ArrayList<>(Arrays.asList("147", "258", "369", "123", "456", "789", "159", "357"));
+    public static ArrayList<String> winningMoves = new ArrayList<>(Arrays.asList("147", "258", "369", "123", "456", "789", "159", "357")); //,        Arrays.asList(["1","4", "7"], ["2","5", "8"], ["3","6", "9"], ["1","2", "3"], ["4","5", "6"], ["7","8", "9"], ["1","5", "9"], ["3","5", "7"])
 
     /** Constructor **/
     public SingleRoom(int roomNumber, StopWatchTimer[] timers, String playerToMove) {
@@ -27,11 +27,12 @@ public class SingleRoom {
             // user turn to move
             if (moves.contains(move)){
                 System.out.println("move already done");
+                MQTTPubPrint.sendMessage(topic+"/"+roomNumber, "{\"error\":" + "\"" + moves.toArray() + "\"," + "player:" + "\"" + playerToMove + "\"}");
             }else if(move > 9 || move < 1){
                 //ADD MESSAGE ERROR
                 MQTTPubPrint.sendMessage(topic+"/"+roomNumber, "{\"error\":" + "\"" + moves.toArray() + "\"," + "player:" + "\"" + playerToMove + "\"}");
                 System.out.println("invalid move");
-            } else if(moves.size()<=5){
+            } else if(moves.size()<=4){
                 moves.add(move);
                 changePlayerToMove();
                 System.out.println("numero di mosse insufficienti per vincere, mossa valida");
@@ -61,31 +62,41 @@ public class SingleRoom {
 
     /** returns true if the player has won, false if the game is still running **/
     private boolean isWinning() {
-        int oddOrNot = 0;
         ArrayList<Integer> playerMoves = new ArrayList<>();
-        if (moves.size()%2 == 0)
-            oddOrNot = 1; // le mosse fatte da questo utente sono quelle nelle caselle pari
+        String[] winningMovesSet = new String[3];
 
-        if (oddOrNot == 1){
-            for (int i = 0; i < moves.size() - 1; i+=2)
-                playerMoves.add(moves.get(i));
-        }
-        else
-            for (int i = 1; i < moves.size() - 1; i+=2)
-                playerMoves.add(moves.get(i));
-        Collections.sort(playerMoves);
-        System.out.println(playerMoves);
-        boolean win;
-        for (int i = 0; i < playerMoves.size(); i++){
-            win = true;
-            for (int j = 0; j < winningMoves.size(); j++){
-                if (!winningMoves.get(i).contains(playerMoves.get(i).toString()))
-                    win = false;
-                if (win == true)
-                    return true;
+        if (moves.size()%2 == 0)
+            for (int i = 0; i < moves.size(); i+=2){
+                if (moves.size()>=i) {
+                    playerMoves.add(moves.get(i));
+                }
             }
+        else
+            for (int i = 1; i < moves.size(); i+=2)
+                if (moves.size()>i)
+                    playerMoves.add(moves.get(i));
+
+        System.out.println(playerMoves);
+        boolean[] win = new boolean[3];
+
+        for ( int k = 0; k < winningMoves.size(); k++){
+                for (int j = 0; j < 3; j++){
+                    winningMovesSet[j]= String.valueOf(winningMoves.get(k).charAt(j)); // single set of possible winning moves
+                    win[j] = false;
+                }
+
+            for (int i = 0; i < winningMovesSet.length; i++){ // scorro ogni elemento del set di mosse vincenti
+                for (int j = 0; j < playerMoves.size(); j++){ // scorro ogni mossa fatta dal giocatore
+                    if (winningMovesSet[i].equals(playerMoves.get(j).toString())){ // se la mossa corrisponde a una del set vincente
+                        win[i] = true;
+                    }
+                }
+            }
+
+            if (win[0] == true && win[1] == true && win[2] == true)
+                return true;
         }
-        return false;
+            return false;
     }
 
     public int getRoomNumber() {
