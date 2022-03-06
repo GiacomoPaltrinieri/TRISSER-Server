@@ -30,11 +30,21 @@ public class MQTTPubPrint {
     private ArrayList<PlayerPoints> playerWins = new ArrayList<>();
 
     public MQTTPubPrint() {
+//        GameSettings.startBroker();
+//        for (String s : My_servlet.getUsers()) {
+//            onlineUsers.put(s, false);
+//            playerWins.add(new PlayerPoints(s));
+//        }// list of users
+
         GameSettings.startBroker();
-        for (String s : My_servlet.getUsers()) {
+        ArrayList<String> ssss = new ArrayList<>();
+        ssss.add("giaco.paltri@gmail.com");
+        ssss.add("trisser.bot2@gmail.com");
+        for (String s : ssss) {
             onlineUsers.put(s, false);
             playerWins.add(new PlayerPoints(s));
         }// list of users
+
 
         topics = getLinesFromFile("topics.txt");
         String[] players = new String[2];
