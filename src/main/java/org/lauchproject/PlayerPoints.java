@@ -28,6 +28,7 @@ public class PlayerPoints{
     public void addPoint() {
         wins++;
     }
+
     public String returnValue(){
         return player + ":" + wins;
     }

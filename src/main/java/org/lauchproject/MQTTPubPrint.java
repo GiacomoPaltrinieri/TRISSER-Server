@@ -169,6 +169,8 @@ public class MQTTPubPrint {
         JSONObject obj = new JSONObject();
         for (int i = 0; i < playerWins.size(); i++)
             obj.put(i+1, playerWins.get(i).getPlayer());
+
+        System.out.println(obj.toString());
         sendMessage("broadcast", obj.toString());
     }
 
