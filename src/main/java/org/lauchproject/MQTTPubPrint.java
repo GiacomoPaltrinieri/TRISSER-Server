@@ -11,9 +11,7 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -47,10 +45,14 @@ public class MQTTPubPrint {
 
 
         topics = getLinesFromFile("topics.txt");
+        for (int i = 0; i < topics.size(); i++){
+            System.out.println(topics.get(i));
+        }
         String[] players = new String[2];
         int bot_number; // attento, il numero deve essere diviso per il numero di bot
         String time = String.valueOf(rules.get(0).get("bot_number"));
         bot_number = Integer.parseInt(String.valueOf(rules.get(0).get("bot_number")));
+
         for (int i = 0; i < topics.size(); i++) rooms.add(new gameInstance(topics.get(i), bot_number, time));
 
         try {
@@ -73,7 +75,6 @@ public class MQTTPubPrint {
                 public void connectionLost(Throwable cause) {}
 
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    System.out.println(topic + " says: \n" + message.toString());
                     String msg = message.toString();
                     if (IsJson.isJSONValid(msg)){
                         JSONParser parser = new JSONParser();
@@ -81,7 +82,6 @@ public class MQTTPubPrint {
                         String user;
                         // controlla le topic, cambia online perchè devi riconoscere l'user
                         if(!Objects.isNull(json) && json.containsKey("move")){
-                            System.out.println("ma boh");
                             if (topics.contains(subStringTopic(topic, "/", getTOPIC)));
                             {
                                 for (int i = 0; i < topics.size(); i++){
@@ -92,9 +92,8 @@ public class MQTTPubPrint {
                             }
                         }else if (topic.contains("online/")){
                             user = topic.replace("online/", "");
-                            System.out.println("ciaoooooo");
                             onlineUsers.replace(user, true); //user is online
-                            System.out.println(user + " True");
+                            System.out.println(user + " -> True");
                         }
                     }else{
                         System.out.println("ERRORE; MESSAGGIO NON IN FORMATO JSON");
@@ -133,7 +132,6 @@ public class MQTTPubPrint {
                                 gameOver();
                             }
                         }, time);
-                        System.out.println(onlineUsers.toString());
                     } catch (MqttException e) {
                         e.printStackTrace();
                     }

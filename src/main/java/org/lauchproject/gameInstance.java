@@ -47,6 +47,7 @@ public class gameInstance {
     public void makeAMove(int instance, String player, int move){
         for (int i = 0; i < single_rooms.size(); i++){
             if (single_rooms.get(i).getRoomNumber() == instance){
+                System.out.println("entra in MakeAMove su gameInstance" + move + " " + player);
                 single_rooms.get(i).makeMove(move, player, topic);
             }
         }
