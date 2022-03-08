@@ -1,1 +1,1 @@
-{"date":"2002-08-22 15:30:22","connection_time":60,"time":100,"bot_number":150}
+{"date":"2002-08-22 15:30:22","connection_time":20,"time":5,"room_instance":50}

@@ -36,7 +36,7 @@ public class MQTTPubPrint {
 
         GameSettings.startBroker();
         ArrayList<String> ssss = new ArrayList<>();
-        ssss.add("giaco.paltri@gmail.com");
+        ssss.add("TRISSER.bot3@gmail.com");
         ssss.add("trisser.bot2@gmail.com");
         for (String s : ssss) {
             onlineUsers.put(s, false);
@@ -49,11 +49,11 @@ public class MQTTPubPrint {
             System.out.println(topics.get(i));
         }
         String[] players = new String[2];
-        int bot_number; // attento, il numero deve essere diviso per il numero di bot
-        String time = String.valueOf(rules.get(0).get("bot_number"));
-        bot_number = Integer.parseInt(String.valueOf(rules.get(0).get("bot_number")));
+        int room_instance; // attento, il numero deve essere diviso per il numero di bot
+        String time = String.valueOf(rules.get(0).get("room_instance"));
+        room_instance = Integer.parseInt(String.valueOf(rules.get(0).get("bot_number")));
 
-        for (int i = 0; i < topics.size(); i++) rooms.add(new gameInstance(topics.get(i), bot_number, time));
+        for (int i = 0; i < topics.size(); i++) rooms.add(new gameInstance(topics.get(i), room_instance, time));
 
         try {
 
@@ -165,31 +165,34 @@ public class MQTTPubPrint {
                     rooms.get(i).getSingle_rooms().get(j).setLoser();
             }
         } // if some games are not over this will end them
-
-        for (int i = 0; i < rooms.size(); i++){ // scorro ogni topic
-            for (int j = 0; j < rooms.get(i).getSingle_rooms().size(); j++){
-                if (j < rooms.get(i).getSingle_rooms().size())
-                    addPoint(rooms.get(i).getSingle_rooms().get(j).getWinner());
-            }
-        }
-
         PlayerPoints temp;
         for (int i = 0; i < playerWins.size(); i++){
-            temp = playerWins.get(i);
-            results.add(playerWins.get(i).getPlayer()+" : "+playerWins.get(i).getWins());
-            for (int j = i; j < playerWins.size(); j++){
-                if (playerWins.get(j).getWins() > temp.getWins() && j < playerWins.size())
-                    playerWins.set(i, playerWins.get(j));
-                    playerWins.set(j, temp);
-                    temp = playerWins.get(i);
+            for (int j = 1; j < playerWins.size(); j++){
+                if (playerWins.get(j).getWins() > playerWins.get(j-1).getWins()){
+                    temp = playerWins.get(j);
+                    playerWins.set(j, playerWins.get(j-1));
+                    playerWins.set(j-1, temp);
+                }
             }
         }
+
+        for (int i = 0; i < playerWins.size(); i++)
+            results.add(playerWins.get(i).getPlayer()+" : "+playerWins.get(i).getWins());
+
         JSONObject obj = new JSONObject();
         for (int i = 0; i < playerWins.size(); i++)
             obj.put(i+1, playerWins.get(i).getPlayer());
+
         String total="";
         for (int i = 0; i < results.size(); i++)
             total += results.get(i);
+
+        for(int i = 0; i < this.onlineUsers.size(); i++) {
+            this.onlineUsers.forEach((key, value) -> {
+                SendMail.send(key.toString(), "Results", results.toString());
+            });
+        }
+
         for (int i = 0; i < onlineUsers.size(); i++){
             onlineUsers.forEach((key, value) -> {
                 SendMail.send(key.toString(), "Results", results.toString());

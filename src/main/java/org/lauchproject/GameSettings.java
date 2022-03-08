@@ -266,7 +266,7 @@ public static void startBroker(){
         ArrayList<String> users = new ArrayList<>();
         JSONObject rules = new JSONObject();
         rules.put("time", 20);
-        rules.put("bot_number", 150);
+        rules.put("room_instance", 150);
         rules.put("connection_time", 20);
         rules.put("date", "2002-08-22 15:30:22");
 

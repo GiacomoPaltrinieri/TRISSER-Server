@@ -80,6 +80,7 @@ public class gameInstance {
         String winner = topic.replace("_", "");
         winner = winner.replace(user, "");
         MQTTPubPrint.removeTopic(topic); // stop listening to this topic
+        System.out.println("Winner on room" + topic + " = " + winner);
         
         for (int i = 0; i < single_rooms.size(); i ++){
             single_rooms.get(i).setWinner(winner);
