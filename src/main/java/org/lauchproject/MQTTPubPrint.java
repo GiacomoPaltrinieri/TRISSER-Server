@@ -165,6 +165,11 @@ public class MQTTPubPrint {
                     rooms.get(i).getSingle_rooms().get(j).setLoser();
             }
         } // if some games are not over this will end them
+
+        for (int i = 0; i < playerWins.size(); i++){
+            System.out.println(playerWins.get(i).getPlayer() + " : " + playerWins.get(i).getWins());
+        }
+
         PlayerPoints temp;
         for (int i = 0; i < playerWins.size(); i++){
             for (int j = 1; j < playerWins.size(); j++){
@@ -248,11 +253,11 @@ public class MQTTPubPrint {
         for (int i = 0; i < rooms.size(); i ++)
             if (rooms.get(i).isPlayedBy(user)){
                 rooms.get(i).hasLost(user);
+                System.out.println();
                 JSONObject obj = new JSONObject();
                 obj.put("not_connected", user);
                 sendMessage("broadcast", obj.toString());
             }
-
     }
 
     /** Given a topic name this functions removes the topic from the listened topics **/
