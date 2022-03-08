@@ -157,6 +157,7 @@ public class MQTTPubPrint {
 
     /** Once gametime is over this function will generate the results and send them to the clients **/
     private void gameOver() {
+        ArrayList<String> results = new ArrayList<>();
         for (int i = 0; i < rooms.size(); i++){ // scorro ogni topic
             for (int j = 0; j < rooms.get(i).getSingle_rooms().size(); j++){
                 if (j < rooms.get(i).getSingle_rooms().size())
@@ -167,6 +168,7 @@ public class MQTTPubPrint {
         PlayerPoints temp;
         for (int i = 0; i < playerWins.size(); i++){
             temp = playerWins.get(i);
+            results.add(playerWins.get(i).getPlayer()+" : "+playerWins.get(i).getWins());
             for (int j = i; j < playerWins.size(); j++){
                 if (playerWins.get(j).getWins() > temp.getWins() && j < playerWins.size())
                     playerWins.set(i, playerWins.get(j));
@@ -177,6 +179,14 @@ public class MQTTPubPrint {
         JSONObject obj = new JSONObject();
         for (int i = 0; i < playerWins.size(); i++)
             obj.put(i+1, playerWins.get(i).getPlayer());
+        String total="";
+        for (int i = 0; i < results.size(); i++)
+            total += results.get(i);
+        for (int i = 0; i < onlineUsers.size(); i++){
+            onlineUsers.forEach((key, value) -> {
+                SendMail.send(key.toString(), "Results", results.toString());
+                });
+        }
 
         System.out.println(obj.toString());
         sendMessage("broadcast", obj.toString());
