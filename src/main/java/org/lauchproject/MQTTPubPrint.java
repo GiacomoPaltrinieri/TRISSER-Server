@@ -51,7 +51,7 @@ public class MQTTPubPrint {
         String[] players = new String[2];
         int room_instance; // attento, il numero deve essere diviso per il numero di bot
         String time = String.valueOf(rules.get(0).get("room_instance"));
-        room_instance = Integer.parseInt(String.valueOf(rules.get(0).get("bot_number")));
+        room_instance = Integer.parseInt(String.valueOf(rules.get(0).get("room_instance")));
 
         for (int i = 0; i < topics.size(); i++) rooms.add(new gameInstance(topics.get(i), room_instance, time));
 
@@ -167,6 +167,15 @@ public class MQTTPubPrint {
         } // if some games are not over this will end them
 
         for (int i = 0; i < playerWins.size(); i++){
+            for (int j = 0; j < rooms.size(); j++){
+                for (int k = 0; k < rooms.get(j).getSingle_rooms().size(); k++){
+                    if (rooms.get(j).getSingle_rooms().get(k).getWinner().equals(playerWins.get(i).getPlayer()))
+                        playerWins.get(i).addPoint();
+                }
+            }
+        }
+
+        for (int i = 0; i < playerWins.size(); i++){
             System.out.println(playerWins.get(i).getPlayer() + " : " + playerWins.get(i).getWins());
         }
 
@@ -249,9 +258,10 @@ public class MQTTPubPrint {
 
     /** This function sends a message containing informations about not connected users to every connected user  **/
     private static void notConnected(String user) {
-        System.out.println("ciao");
+        System.out.println("user" + user + " not connected");
         for (int i = 0; i < rooms.size(); i ++)
             if (rooms.get(i).isPlayedBy(user)){
+                System.out.println(rooms.get(i).getTopic() + " -> " + user + " has lost");
                 rooms.get(i).hasLost(user);
                 System.out.println();
                 JSONObject obj = new JSONObject();
