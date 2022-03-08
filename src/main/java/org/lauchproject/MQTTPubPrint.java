@@ -20,7 +20,7 @@ import static org.lauchproject.gameInstance.*;
 public class MQTTPubPrint {
 
     public JSONObject onlineUsers = new JSONObject();
-    public static final int qos = 1;
+    public static final int qos = 0;
     private ArrayList<String> topics = new ArrayList<>();
     private static ArrayList<gameInstance> rooms = new ArrayList<>();
     private ArrayList<JSONObject> rules = getJSONfromFile("rules.txt");

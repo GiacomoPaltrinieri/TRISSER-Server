@@ -27,10 +27,10 @@ public class SingleRoom {
             // user turn to move
             if (moves.contains(move)){
                 System.out.println("move already done");
-                MQTTPubPrint.sendMessage(topic+"/"+roomNumber, "{\"error\":" + "\"" + moves.toArray() + "\"," + "player:" + "\"" + playerToMove + "\"}");
+                MQTTPubPrint.sendMessage(topic+"/"+roomNumber, "{\"error\":" + "\"" + moves.toString() + "\"," + "player:" + "\"" + playerToMove + "\"}");
             }else if(move > 9 || move < 1){
                 //ADD MESSAGE ERROR
-                MQTTPubPrint.sendMessage(topic+"/"+roomNumber, "{\"error\":" + "\"" + moves.toArray() + "\"," + "player:" + "\"" + playerToMove + "\"}");
+                MQTTPubPrint.sendMessage(topic+"/"+roomNumber, "{\"error\":" + "\"" + moves.toString() + "\"," + "player:" + "\"" + playerToMove + "\"}");
                 System.out.println("invalid move");
             } else if(moves.size()<=4){
                 moves.add(move);
