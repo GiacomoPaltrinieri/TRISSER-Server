@@ -11,7 +11,7 @@ public class SingleRoom {
     private StopWatchTimer[] timers = new StopWatchTimer[2];
     private ArrayList<Integer> moves = new ArrayList<>(); // list of moves that have been made
     private String playerToMove; //name of the player that has to move
-    private String winner; // the name of the winning bot
+    private String winner = "StillPlaying"; // the name of the winning bot
     private String temp;
     public static ArrayList<String> winningMoves = new ArrayList<>(Arrays.asList("147", "258", "369", "123", "456", "789", "159", "357")); //,        Arrays.asList(["1","4", "7"], ["2","5", "8"], ["3","6", "9"], ["1","2", "3"], ["4","5", "6"], ["7","8", "9"], ["1","5", "9"], ["3","5", "7"])
 
@@ -41,7 +41,7 @@ public class SingleRoom {
                 if (isWinning()){
                     System.out.println(playerToMove + " has won");
                     setWinner(playerToMove);
-                }else if (moves.size() == 9){
+                }else if (moves.size() >= 9){
                     System.out.println("no one has won (pareggio)");
                     setWinner("none");
                 }
@@ -120,6 +120,13 @@ public class SingleRoom {
 
     public void setWinner(String winner) {
         this.winner=winner;
+    }
+
+    public void setLoser(){
+        if (playerToMove.equals(timers[0].getPlayer()))
+            setWinner(timers[1].getPlayer());
+        else if (playerToMove.equals(timers[1].getPlayer()))
+            setWinner(timers[0].getPlayer());
     }
 
     public String getWinner() {

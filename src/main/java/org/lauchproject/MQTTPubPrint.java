@@ -158,10 +158,18 @@ public class MQTTPubPrint {
     /** Once gametime is over this function will generate the results and send them to the clients **/
     private void gameOver() {
         ArrayList<String> results = new ArrayList<>();
+
+        for (int i = 0; i < rooms.size(); i++){
+            for (int j = 0; j < rooms.get(i).getSingle_rooms().size(); j++){
+                if (rooms.get(i).getSingle_rooms().get(j).getWinner().equals("StillPlaying"))
+                    rooms.get(i).getSingle_rooms().get(j).setLoser();
+            }
+        } // if some games are not over this will end them
+
         for (int i = 0; i < rooms.size(); i++){ // scorro ogni topic
             for (int j = 0; j < rooms.get(i).getSingle_rooms().size(); j++){
                 if (j < rooms.get(i).getSingle_rooms().size())
-                    addPoint(rooms.get(i).getSingle_rooms().get(i).getWinner());
+                    addPoint(rooms.get(i).getSingle_rooms().get(j).getWinner());
             }
         }
 
