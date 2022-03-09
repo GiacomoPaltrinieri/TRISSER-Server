@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -23,25 +24,25 @@ public class MQTTPubPrint {
     public static final int qos = 0;
     private ArrayList<String> topics = new ArrayList<>();
     private static ArrayList<gameInstance> rooms = new ArrayList<>();
-    private ArrayList<JSONObject> rules = getJSONfromFile("rules.txt");
+    private ArrayList<JSONObject> rules = getRulesFromMy_servlet();
     private static MqttClient sampleClient;
     private ArrayList<PlayerPoints> playerWins = new ArrayList<>();
 
     public MQTTPubPrint() {
-//        GameSettings.startBroker();
-//        for (String s : My_servlet.getUsers()) {
-//            onlineUsers.put(s, false);
-//            playerWins.add(new PlayerPoints(s));
-//        }// list of users
-
         GameSettings.startBroker();
-        ArrayList<String> ssss = new ArrayList<>();
-        ssss.add("TRISSER.bot3@gmail.com");
-        ssss.add("trisser.bot2@gmail.com");
-        for (String s : ssss) {
+        for (String s : My_servlet.getUsers()) {
             onlineUsers.put(s, false);
             playerWins.add(new PlayerPoints(s));
         }// list of users
+
+//        GameSettings.startBroker();
+//        ArrayList<String> ssss = new ArrayList<>();
+//        ssss.add("TRISSER.bot3@gmail.com");
+//        ssss.add("trisser.bot2@gmail.com");
+//        for (String s : ssss) {
+//            onlineUsers.put(s, false);
+//            playerWins.add(new PlayerPoints(s));
+//        }// list of users
 
 
         topics = getLinesFromFile("topics.txt");
@@ -300,6 +301,12 @@ public class MQTTPubPrint {
         }
         System.out.println(json);
         return json;
+    }
+
+    private static ArrayList<JSONObject> getRulesFromMy_servlet(){
+        ArrayList<JSONObject> s = new ArrayList<>();
+        s.add(My_servlet.getRules());
+        return s;
     }
 
     /** This function waits for a specific time to execute a specific function **/
