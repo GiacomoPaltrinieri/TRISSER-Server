@@ -175,10 +175,6 @@ public class MQTTPubPrint {
             }
         }
 
-        for (int i = 0; i < playerWins.size(); i++){
-            System.out.println(playerWins.get(i).getPlayer() + " : " + playerWins.get(i).getWins());
-        }
-
         PlayerPoints temp;
         for (int i = 0; i < playerWins.size(); i++){
             for (int j = 1; j < playerWins.size(); j++){
@@ -190,8 +186,10 @@ public class MQTTPubPrint {
             }
         }
 
-        for (int i = 0; i < playerWins.size(); i++)
+        for (int i = 0; i < playerWins.size(); i++){
+            System.out.println(playerWins.get(i).getPlayer() + " : " + playerWins.get(i).getWins());
             results.add(playerWins.get(i).getPlayer()+" : "+playerWins.get(i).getWins());
+        }
 
         JSONObject obj = new JSONObject();
         for (int i = 0; i < playerWins.size(); i++)
@@ -215,6 +213,7 @@ public class MQTTPubPrint {
 
         System.out.println(obj.toString());
         sendMessage("broadcast", obj.toString());
+        GameSettings.startBroker();
     }
 
     /** This function when called adds a point to a bot **/
@@ -235,6 +234,7 @@ public class MQTTPubPrint {
         }
     }
 
+    /** This function is used to get lines from a file, each line in an arraylist item **/
     private ArrayList<String> getLinesFromFile(String path) {
         File file = new File(path);
         ArrayList<String> list = new ArrayList<>();

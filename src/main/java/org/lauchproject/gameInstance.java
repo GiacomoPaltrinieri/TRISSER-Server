@@ -1,13 +1,10 @@
 package org.lauchproject;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
-import static java.io.File.separator;
-/** This class describes every single room, it's players and everything related to all the games that have to played in that  **/
+/**
+ * This class represents a single topic which contains more rooms (mail1_mail2)
+ **/
+
 public class gameInstance {
     public static final int getTOPIC=0;
     public static final int getINSTANCE=1;
@@ -43,7 +40,7 @@ public class gameInstance {
     public String getTopic() {
         return topic;
     }
-
+    /** This function is used to make a move in a specific instance of the bot **/
     public void makeAMove(int instance, String player, int move){
         for (int i = 0; i < single_rooms.size(); i++){
             if (single_rooms.get(i).getRoomNumber() == instance){
@@ -70,18 +67,20 @@ public class gameInstance {
         return parts[index];
     }
 
+    /** This function reports whether or not a user is part of that instance**/
     public boolean isPlayedBy(String user) {
         if (topic.contains(user))
             return true;
         return false;
     }
 
+    /** Given a user this will set the winner in every game of the room **/
     public void hasLost(String user) {
         String winner = topic.replace("_", "");
         winner = winner.replace(user, "");
         MQTTPubPrint.removeTopic(topic); // stop listening to this topic
         System.out.println("Winner on room" + topic + " = " + winner);
-        
+
         for (int i = 0; i < single_rooms.size(); i ++){
             single_rooms.get(i).setWinner(winner);
         }

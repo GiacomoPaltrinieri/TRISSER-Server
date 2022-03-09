@@ -11,7 +11,7 @@ import java.util.ListIterator;
 import java.util.Scanner;
 
 public class GameSettings {
-/** This function takes a path and creates a JSONArray using the data written to it **/
+    /** This function takes a path and creates a JSONArray using the data written to it **/
     public static JSONArray fileToJsonArray(String path){
         File file = new File(path);
         Scanner line = null;
@@ -28,7 +28,6 @@ public class GameSettings {
 
         return userInfo;
     }
-
     /** This method takes a String containing one or more commands (command -> to use more commands, just insert command1 && command2...) to execute in the CMD, the result String you get in return is the output of the command you would see on the CMD**/
     public static String executeCommand(String command) {
         String line;
@@ -212,7 +211,6 @@ public class GameSettings {
 
         writeToFile(path, toWrite, false);
     }
-
     /** returns the other user given a topic and a user**/
     private static String getOtherUser(String user, String topic) {
         String otherUser;
@@ -220,8 +218,7 @@ public class GameSettings {
         otherUser = otherUser.replace("_", "");
         return otherUser;
     }
-
-
+    /** This function generates every single room where a game will be played (mail1_mail2/22 -> 0,1,2,3,4,5..21)**/
     private static int subRoomGenerator(int size, int bot_instances) {
         return bot_instances/size;
     }
@@ -258,9 +255,14 @@ public class GameSettings {
 
         writeToFile(path, ruleLine, false);
     }
-public static void startBroker(){
+    /**This function starts the broker**/
+    public static void startBroker(){
     System.out.println(executeCommand("cd C:\\Program Files\\mosquitto\\ && Net start Mosquitto")); // Starts the mosquitto broker
 }
+    /**This function stops the broker**/
+    public static void stopBroker(){
+        System.out.println(executeCommand("Taskkill /IM \"mosquitto.exe\" /F")); // Closes the mosquitto broker
+    }
     /** Main method **/
    /* public static void main(String[] args) {
         ArrayList<String> users = new ArrayList<>();

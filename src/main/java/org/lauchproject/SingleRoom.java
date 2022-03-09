@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * This class represents a single instance of a room (mail1_mail2/n -> n is represented by a SingleRoom Object)
+ **/
+
+
 public class SingleRoom {
 
     /** Attributes **/

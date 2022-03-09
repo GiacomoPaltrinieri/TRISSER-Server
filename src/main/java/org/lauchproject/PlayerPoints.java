@@ -1,5 +1,9 @@
 package org.lauchproject;
 
+/**
+ * This class is used to define a player and the points he managed to score after the game
+ * **/
+
 public class PlayerPoints{
     private String player;
     private int wins;
