@@ -32,6 +32,21 @@ public class GamePreparation {
         timer.schedule(new MyTimeTask(), date);
     }
 
+    public GamePreparation(){
+        System.out.println("Current Time: " + df.format( new Date()));
+
+        //Date and time at which you want to execute
+        Date date = null;
+        try {
+            date = df.parse(getGameTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println("questo? " + date);
+
+        timer.schedule(new MyTimeTask(), date);
+    }
+
     public static String getGameTime() {
         try{
             String path = "time.txt";

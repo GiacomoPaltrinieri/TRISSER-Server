@@ -45,7 +45,7 @@ public class MQTTPubPrint {
 //        }// list of users
 
 
-        topics = getLinesFromFile("topics.txt");
+        topics = getLinesFromFile("C:\\Users\\awais\\IdeaProjects\\TRISSER-main\\topics.txt");
         for (int i = 0; i < topics.size(); i++){
             System.out.println(topics.get(i));
         }
@@ -109,7 +109,7 @@ public class MQTTPubPrint {
             sampleClient.subscribe("online/#"); //Listen to online topics
             System.out.println("Connected");
 
-            rules = getJSONfromFile("rules.txt");
+            //rules = getJSONfromFile("rules.txt");
             int connection_time;
             connection_time = Integer.parseInt(String.valueOf(rules.get(0).get("connection_time")));
             connection_time = connection_time*1000; // conversion in seconds

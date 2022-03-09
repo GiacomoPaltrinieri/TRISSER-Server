@@ -254,7 +254,9 @@ public class GameSettings {
         ruleLine.add((String) rules.get("date"));
 
         writeToFile(path, ruleLine, false);
+        new GamePreparation();
     }
+
     /**This function starts the broker**/
     public static void startBroker(){
     System.out.println(executeCommand("cd C:\\Program Files\\mosquitto\\ && Net start Mosquitto")); // Starts the mosquitto broker
