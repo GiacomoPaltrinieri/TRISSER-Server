@@ -249,11 +249,18 @@ public class GameSettings {
 
         // writes to file the game and time of the game
         String separator = System.getProperty("file.separator");
-        String path = "time.txt";
+        String path = "C:\\Users\\awais\\IdeaProjects\\TRISSER-main\\time.txt";
         ArrayList<String> ruleLine = new ArrayList<>();
         ruleLine.add((String) rules.get("date"));
 
         writeToFile(path, ruleLine, false);
+
+        path = "C:\\Users\\awais\\IdeaProjects\\TRISSER-main\\time.txt"; // writes topics in a file
+        ArrayList<String> topicsList = new ArrayList<>();
+        for (String s : topics)
+            topicsList.add(s);
+        writeToFile(path, topicsList, false);
+        System.out.println("ciaoooooooooocomestai?");
         new GamePreparation();
     }
 

@@ -49,7 +49,7 @@ public class GamePreparation {
 
     public static String getGameTime() {
         try{
-            String path = "time.txt";
+            String path = "C:\\Users\\awais\\IdeaProjects\\TRISSER-main\\time.txt";
             File file = new File(path);
             FileReader  fr= new FileReader(file);
             BufferedReader br = new BufferedReader(fr);

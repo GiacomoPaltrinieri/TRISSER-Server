@@ -12,6 +12,7 @@ public class My_servlet extends HttpServlet{
     private static ArrayList<String> users=new ArrayList<>();
     private static ArrayList<String> logs=new ArrayList<>();
     private static JSONObject rules = new JSONObject();
+    private static String bot_num,temp_gioco_bot,temp_connessione,data_start_game,temp_start_game;
 
     public static ArrayList<String> getUsers() {
         return users;
@@ -21,15 +22,35 @@ public class My_servlet extends HttpServlet{
         return rules;
     }
 
+    public static String getBot_num() {
+        return bot_num;
+    }
+
+    public static String getTemp_gioco_bot() {
+        return temp_gioco_bot;
+    }
+
+    public static String getTemp_connessione() {
+        return temp_connessione;
+    }
+
+    public static String getData_start_game() {
+        return data_start_game;
+    }
+
+    public static String getTemp_start_game() {
+        return temp_start_game;
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
 
-        String bot_num=request.getParameter("bot_num");
-        String temp_gioco_bot=request.getParameter("temp_gioco_bot");
-        String temp_connessione=request.getParameter("temp_connessione");
-        String data_start_game=request.getParameter("data_start_game");
-        String temp_start_game=request.getParameter("temp_start_game");
+        bot_num=request.getParameter("bot_num");
+        temp_gioco_bot=request.getParameter("temp_gioco_bot");
+        temp_connessione=request.getParameter("temp_connessione");
+        data_start_game=request.getParameter("data_start_game");
+        temp_start_game=request.getParameter("temp_start_game");
 
         int i=0;
 
