@@ -7,7 +7,7 @@
           <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/src/main/web_app/web_inf/web.xml" />
         </descriptors>
         <webroots>
-          <root url="file://$MODULE_DIR$/src/main/web_app/web_inf" relative="/WEB-INF" />
+          <root url="file://$MODULE_DIR$/src/main/web_app" relative="/" />
         </webroots>
         <sourceRoots />
       </configuration>

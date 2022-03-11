@@ -11,7 +11,6 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -22,9 +21,9 @@ public class MQTTPubPrint {
 
     public JSONObject onlineUsers = new JSONObject();
     public static final int qos = 0;
-    private ArrayList<String> topics = new ArrayList<>();
+    private ArrayList<String> topics = GameSettings.getTopics();
     private static ArrayList<gameInstance> rooms = new ArrayList<>();
-    private ArrayList<JSONObject> rules = getRulesFromMy_servlet();
+    private JSONObject rules = My_servlet.getRules();
     private static MqttClient sampleClient;
     private ArrayList<PlayerPoints> playerWins = new ArrayList<>();
 
@@ -44,15 +43,13 @@ public class MQTTPubPrint {
 //            playerWins.add(new PlayerPoints(s));
 //        }// list of users
 
-
-        topics = getLinesFromFile("C:\\Users\\awais\\IdeaProjects\\TRISSER-main\\topics.txt");
         for (int i = 0; i < topics.size(); i++){
             System.out.println(topics.get(i));
         }
-        String[] players = new String[2];
+
         int room_instance; // attento, il numero deve essere diviso per il numero di bot
-        String time = String.valueOf(rules.get(0).get("room_instance"));
-        room_instance = Integer.parseInt(String.valueOf(rules.get(0).get("room_instance")));
+        String time = String.valueOf(rules.get("room_instance"));
+        room_instance = Integer.parseInt(String.valueOf(rules.get("room_instance")));
 
         for (int i = 0; i < topics.size(); i++) rooms.add(new gameInstance(topics.get(i), room_instance, time));
 
@@ -111,7 +108,7 @@ public class MQTTPubPrint {
 
             //rules = getJSONfromFile("rules.txt");
             int connection_time;
-            connection_time = Integer.parseInt(String.valueOf(rules.get(0).get("connection_time")));
+            connection_time = Integer.parseInt(String.valueOf(rules.get("connection_time")));
             connection_time = connection_time*1000; // conversion in seconds
 
             int finalTime = connection_time;
@@ -125,7 +122,7 @@ public class MQTTPubPrint {
                         System.out.println(finalTime);
                         checkForNotConnected(onlineUsers);
                         sendMessage("broadcast", "{\"game\":\"start\"}");
-                        int time = Integer.parseInt(String.valueOf(rules.get(0).get("time")));
+                        int time = Integer.parseInt(String.valueOf(rules.get("time")));
                         time = time*1000;
                         startMethodAfterNMilliseconds(new Runnable() {
                             @Override
@@ -301,12 +298,6 @@ public class MQTTPubPrint {
         }
         System.out.println(json);
         return json;
-    }
-
-    private static ArrayList<JSONObject> getRulesFromMy_servlet(){
-        ArrayList<JSONObject> s = new ArrayList<>();
-        s.add(My_servlet.getRules());
-        return s;
     }
 
     /** This function waits for a specific time to execute a specific function **/

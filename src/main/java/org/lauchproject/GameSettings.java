@@ -11,6 +11,7 @@ import java.util.ListIterator;
 import java.util.Scanner;
 
 public class GameSettings {
+    private static ArrayList<String> topics = new ArrayList<>();
     /** This function takes a path and creates a JSONArray using the data written to it **/
     public static JSONArray fileToJsonArray(String path){
         File file = new File(path);
@@ -187,9 +188,6 @@ public class GameSettings {
             //SendMail.send(users.get(i), "GAME", mails.get(i));
             singleMail.clear();
         }
-        String path = "userInfo.txt";
-        writeToFile(path, mails, false);
-        System.out.println(mails);
     }
     /** This function writes the ACLS for every user on the config file **/
     private static void writeACLS(ArrayList<String> users, ArrayList<String> topics, int subRoomList) {
@@ -231,6 +229,11 @@ public class GameSettings {
 //            subRoomList.add(i);
 //        return subRoomList;
 //    }
+
+    public static ArrayList<String> getTopics(){
+        return topics;
+    }
+
     /** This function returns the topics that a user has access to **/
     private static JSONArray getTopicAccess(ArrayList<String> topics, String user) {
         JSONArray permittedTopics = new JSONArray();
@@ -244,26 +247,9 @@ public class GameSettings {
         ArrayList<String> topics = setACLs(users);
         ArrayList<String> pwds = setPassword(users);
         new MQTTPubPrint(); // test send message
-        System.out.println(executeCommand("Taskkill /IM \"mosquitto.exe\" /F")); // Closes the mosquitto broker
         generateMailContent(users, topics, pwds, rules, 150);
-
         // writes to file the game and time of the game
-        String separator = System.getProperty("file.separator");
-        String path = "C:\\Users\\awais\\IdeaProjects\\TRISSER-main\\time.txt";
-        ArrayList<String> ruleLine = new ArrayList<>();
-        ruleLine.add((String) rules.get("date"));
-
-        writeToFile(path, ruleLine, false);
-
-        path = "C:\\Users\\awais\\IdeaProjects\\TRISSER-main\\time.txt"; // writes topics in a file
-        ArrayList<String> topicsList = new ArrayList<>();
-        for (String s : topics)
-            topicsList.add(s);
-        writeToFile(path, topicsList, false);
-        System.out.println("ciaoooooooooocomestai?");
-        new GamePreparation();
     }
-
     /**This function starts the broker**/
     public static void startBroker(){
     System.out.println(executeCommand("cd C:\\Program Files\\mosquitto\\ && Net start Mosquitto")); // Starts the mosquitto broker
