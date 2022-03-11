@@ -19,13 +19,12 @@ function take_values(){
             var callback=(http.response);
             var textarea=document.getElementById("log");
             textarea.innerHTML="";
-
             console.log(callback)
             textarea.innerHTML=textarea.innerHTML+callback;
 
         }
     }
-
+    console.log(data);
     http.open("POST", "http://localhost:8080/TRISSER_main_war_exploded/MyServlet", true);
     http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     http.send(data);
@@ -34,8 +33,6 @@ function take_values(){
     return false;
 
 }
-
-
 
 /**Function to create Multiple input tags for the email input**/
 

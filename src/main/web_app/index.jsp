@@ -13,20 +13,20 @@
             <h2>Set Rules</h2>
             <div id="alfa_cont">
                 <div class="container" >
-                    <input type="number" placeholder="NUMERO BOT" name="bot_num" class="myin" onchange="create_input()">
+                    <input type="number" placeholder="NUMERO BOT" name="bot_num" class="myin" onchange="create_input()" required>
                     <div id="input_cont">
-                        <input type="email" placeholder="EMAIL" name='email_1' class="myin" required>
-                        <input type="email" placeholder="EMAIL" name='email_2' class="myin" required>
-                        <input type="email" placeholder="EMAIL" name='email_3' class="myin" required>
+                        <input type="email" placeholder="EMAIL" name='email_1' class="myin" >
+                        <input type="email" placeholder="EMAIL" name='email_2' class="myin" >
+                        <input type="email" placeholder="EMAIL" name='email_3' class="myin" >
                         <!-- INPUT TAG IS ADDED BY THE JS SCRIPT-->
                     </div>
                 </div>
 
                 <div class="container">
                     <label >Tempo di gioco a disposizione del bot:</label>
-                    <input type="number" name="temp_gioco_bot" required value="20">
+                    <input type="number" name="temp_gioco_bot" value="20">
                     <label >Tempo di connessione:</label>
-                    <input type="number" name="temp_connessione" required value="20">
+                    <input type="number" name="temp_connessione" value="20">
                     <label >Data inizio gioco:</label>
                     <input type="date" placeholder="DATA" name="data_start_game" required>
                     <label >Orario inizio gioco:</label>

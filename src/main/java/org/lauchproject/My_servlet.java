@@ -58,28 +58,17 @@ public class My_servlet extends HttpServlet{
              users.add(request.getParameter("email_"+i));
         }
 
+        rules.put("time", temp_gioco_bot);
+        rules.put("bot_number", bot_num);
+        rules.put("connection_time", temp_connessione);
+        rules.put("date", data_start_game + " " + temp_start_game + ":00");
 
-            rules.put("time", temp_gioco_bot);
-            rules.put("bot_number", bot_num);
-            rules.put("connection_time", temp_connessione);
-            rules.put("date", data_start_game + " " + temp_start_game + ":00");
-
+        PrintWriter out = response.getWriter();
+        out.write("Server Started\n Work in Progress!!!");
 
         new GameSettings(rules,users);
 
-        PrintWriter out = response.getWriter();
-        out.write("Work In Progress!!");
-        /*for (int j=0;j< logs.size();j++){
-            //out.write(logs.get(j))
-        }*/
-
-
     }
-
-    /*public static void getlog(String log){
-        logs.add(log);
-    }*/
-
 
     public void destroy() {
     }
