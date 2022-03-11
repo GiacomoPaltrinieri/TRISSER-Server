@@ -68,17 +68,17 @@ public class My_servlet extends HttpServlet{
         new GameSettings(rules,users);
 
         PrintWriter out = response.getWriter();
-        for (int j=0;j< logs.size();j++){
-            //out.write(logs.get(j));
-            out.write("Work In Progress!!");
-        }
+        out.write("Work In Progress!!");
+        /*for (int j=0;j< logs.size();j++){
+            //out.write(logs.get(j))
+        }*/
 
 
     }
 
-    public static void getlog(String log){
+    /*public static void getlog(String log){
         logs.add(log);
-    }
+    }*/
 
 
     public void destroy() {

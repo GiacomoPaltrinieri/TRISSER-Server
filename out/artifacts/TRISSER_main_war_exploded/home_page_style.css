@@ -36,7 +36,8 @@
     flex-direction: column;
     margin: 10px;
     padding: 10px;
-
+    border: 1px solid black;
+    border-left: 6px solid black;
 }
 
 .myin{
@@ -48,5 +49,27 @@
     padding: 3px;
     margin: 10px;
     width: 50%;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#serverLog textarea{
+    resize: none;
+    width: 90%;
+    height: 90%;
+}
+
+@media screen  and (max-width: 800px){
+    #mybody{
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    #serverLog textarea{
+        height: 250px;
+        width:100%;
+    }
+
 }

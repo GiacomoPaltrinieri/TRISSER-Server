@@ -15,19 +15,22 @@
                 <div class="container" >
                     <input type="number" placeholder="NUMERO BOT" name="bot_num" class="myin" onchange="create_input()">
                     <div id="input_cont">
+                        <input type="email" placeholder="EMAIL" name='email_1' class="myin" required>
+                        <input type="email" placeholder="EMAIL" name='email_2' class="myin" required>
+                        <input type="email" placeholder="EMAIL" name='email_3' class="myin" required>
                         <!-- INPUT TAG IS ADDED BY THE JS SCRIPT-->
                     </div>
                 </div>
 
                 <div class="container">
                     <label >Tempo di gioco a disposizione del bot:</label>
-                    <input type="number" name="temp_gioco_bot">
+                    <input type="number" name="temp_gioco_bot" required value="20">
                     <label >Tempo di connessione:</label>
-                    <input type="number" name="temp_connessione">
+                    <input type="number" name="temp_connessione" required value="20">
                     <label >Data inizio gioco:</label>
-                    <input type="date" placeholder="DATA" name="data_start_game">
+                    <input type="date" placeholder="DATA" name="data_start_game" required>
                     <label >Orario inizio gioco:</label>
-                    <input type="time" placeholder="TIME" name="temp_start_game">
+                    <input type="time" placeholder="TIME" name="temp_start_game" required>
                 </div>
             </div>
 

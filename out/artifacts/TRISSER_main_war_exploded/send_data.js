@@ -45,14 +45,6 @@ function create_input(){
     container.innerHTML="";
     var name="email_";
     for (i=0;i<cont;i++){
-        container.innerHTML=container.innerHTML+ '<input type="email" placeholder="EMAIL" name='+name+i+' class="myin">';
+        container.innerHTML=container.innerHTML+ '<input type="email" placeholder="EMAIL" name='+name+i+' class="myin" required>';
     }
 }
-
-
-/**Function to print logs on the gui**/
-/*function print_log(log){
-    //need a function in the backend tha send me the string to print.
-    // function Return String-->myServlet.response-->print_log.js
-    console.log(log);
-}*/
