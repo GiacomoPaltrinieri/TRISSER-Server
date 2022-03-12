@@ -26,7 +26,7 @@ public class GamePreparation {
         System.out.println("Current Time: " + df.format( new Date()));
 
         //Date and time at which you want to execute
-        Date date = df.parse(getGameTime());
+        Date date = df.parse(My_servlet.getTemp_start_game());
         System.out.println("questo? " + date);
 
         timer.schedule(new MyTimeTask(), date);
@@ -38,31 +38,13 @@ public class GamePreparation {
         //Date and time at which you want to execute
         Date date = null;
         try {
-            date = df.parse(getGameTime());
+            date = df.parse(My_servlet.getTemp_start_game());
         } catch (ParseException e) {
             e.printStackTrace();
         }
         System.out.println("questo? " + date);
 
         timer.schedule(new MyTimeTask(), date);
-    }
-
-    public static String getGameTime() {
-        try{
-            String path = "C:\\Users\\awais\\IdeaProjects\\TRISSER-main\\time.txt";
-            File file = new File(path);
-            FileReader  fr= new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-            String time = br.readLine();
-            System.out.println("time : " + time);
-            br.close();
-            fr.close();
-            return time;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 }

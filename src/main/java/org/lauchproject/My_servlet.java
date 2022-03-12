@@ -69,8 +69,12 @@ public class My_servlet extends HttpServlet{
 
         PrintWriter out = response.getWriter();
         out.write("Server Started\n Work in Progress!!!");
-
-        new GameSettings(rules,users);
+        System.out.println(rules);
+        System.out.println(users);
+        System.out.println("TEMP GIOCO"+temp_gioco_bot);
+        System.out.println("temp conne"+temp_connessione);
+        System.out.println("bot istance"+bot_istance);
+        //new GameSettings(rules,users);
 
     }
 
