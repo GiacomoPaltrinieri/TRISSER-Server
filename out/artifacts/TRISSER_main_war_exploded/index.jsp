@@ -13,6 +13,7 @@
             <h2>Set Rules</h2>
             <div id="alfa_cont">
                 <div class="container" >
+                    <input type="number" placeholder="NUMERO ISTANZE BOT" name="bot_istance" class="myin"  required>
                     <input type="number" placeholder="NUMERO BOT" name="bot_num" class="myin" onchange="create_input()" required>
                     <div id="input_cont">
                         <input type="email" placeholder="EMAIL" name='email_1' class="myin" >
