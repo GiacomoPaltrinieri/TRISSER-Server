@@ -12,7 +12,7 @@ public class My_servlet extends HttpServlet{
     private static ArrayList<String> users=new ArrayList<>();
     private static ArrayList<String> logs=new ArrayList<>();
     private static JSONObject rules = new JSONObject();
-    private static String bot_num,temp_gioco_bot,temp_connessione,data_start_game,temp_start_game;
+    private static String bot_num,temp_gioco_bot,temp_connessione,data_start_game,temp_start_game,bot_istance;
 
     public static ArrayList<String> getUsers() {
         return users;
@@ -42,10 +42,14 @@ public class My_servlet extends HttpServlet{
         return temp_start_game;
     }
 
+    public static String getBot_istance() {
+        return bot_istance;
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
-
+        bot_istance=request.getParameter("bot_istance");
         bot_num=request.getParameter("bot_num");
         temp_gioco_bot=request.getParameter("temp_gioco_bot");
         temp_connessione=request.getParameter("temp_connessione");

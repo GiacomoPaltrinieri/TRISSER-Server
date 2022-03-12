@@ -47,9 +47,9 @@ public class MQTTPubPrint {
             System.out.println(topics.get(i));
         }
 
-        int room_instance; // attento, il numero deve essere diviso per il numero di bot
-        String time = String.valueOf(rules.get("room_instance"));
-        room_instance = Integer.parseInt(String.valueOf(rules.get("room_instance")));
+
+        String time = My_servlet.getTemp_gioco_bot();
+        int room_instance = Integer.parseInt(My_servlet.getBot_istance());
 
         for (int i = 0; i < topics.size(); i++) rooms.add(new gameInstance(topics.get(i), room_instance, time));
 
@@ -108,7 +108,7 @@ public class MQTTPubPrint {
 
             //rules = getJSONfromFile("rules.txt");
             int connection_time;
-            connection_time = Integer.parseInt(String.valueOf(rules.get("connection_time")));
+            connection_time = Integer.parseInt(My_servlet.getTemp_connessione());
             connection_time = connection_time*1000; // conversion in seconds
 
             int finalTime = connection_time;
@@ -122,7 +122,7 @@ public class MQTTPubPrint {
                         System.out.println(finalTime);
                         checkForNotConnected(onlineUsers);
                         sendMessage("broadcast", "{\"game\":\"start\"}");
-                        int time = Integer.parseInt(String.valueOf(rules.get("time")));
+                        int time = Integer.parseInt(My_servlet.getTemp_gioco_bot());
                         time = time*1000;
                         startMethodAfterNMilliseconds(new Runnable() {
                             @Override
@@ -214,13 +214,6 @@ public class MQTTPubPrint {
         GameSettings.startBroker();
     }
 
-    /** This function when called adds a point to a bot **/
-    private void addPoint(String user){
-        for (int i = 0; i < playerWins.size(); i++)
-            if (playerWins.get(i).getPlayer().equals(user))
-                playerWins.get(i).addPoint();
-    }
-
     /** This function sends an MQTT message **/
     public static void sendMessage(String topic, String msg) {
         MqttMessage message = new MqttMessage(msg.getBytes());
@@ -230,20 +223,6 @@ public class MQTTPubPrint {
         } catch (MqttException e) {
             e.printStackTrace();
         }
-    }
-
-    /** This function is used to get lines from a file, each line in an arraylist item **/
-    private ArrayList<String> getLinesFromFile(String path) {
-        File file = new File(path);
-        ArrayList<String> list = new ArrayList<>();
-        try {
-            Scanner line = new Scanner(file);
-            while (line.hasNext())
-                list.add(line.nextLine());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return list;
     }
 
     /** This function checks whether a user is connected or not **/

@@ -2,7 +2,8 @@
 /**Function for Sending data to MyServlet whitout Reloading page**/
 function take_values(){
 
-    var data="bot_num="+encodeURIComponent(document.forms["myform"]["bot_num"].value)+
+    var data="bot_istance="+encodeURIComponent(document.forms["myform"] ["bot_istance"])+
+        "bot_num="+encodeURIComponent(document.forms["myform"]["bot_num"].value)+
         "&temp_gioco_bot="+encodeURIComponent(document.forms["myform"] ["temp_gioco_bot"].value)+
         "&temp_connessione="+encodeURIComponent(document.forms["myform"] ["temp_connessione"].value)+
         "&data_start_game="+encodeURIComponent(document.forms["myform"] ["data_start_game"].value)+
