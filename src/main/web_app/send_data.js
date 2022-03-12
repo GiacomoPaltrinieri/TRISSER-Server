@@ -3,14 +3,14 @@
 function take_values(){
 
     var data="bot_istance="+encodeURIComponent(document.forms["myform"] ["bot_istance"].value)+
-        "bot_num="+encodeURIComponent(document.forms["myform"]["bot_num"].value)+
+        "&bot_num="+encodeURIComponent(document.forms["myform"]["bot_num"].value)+
         "&temp_gioco_bot="+encodeURIComponent(document.forms["myform"] ["temp_gioco_bot"].value)+
         "&temp_connessione="+encodeURIComponent(document.forms["myform"] ["temp_connessione"].value)+
         "&data_start_game="+encodeURIComponent(document.forms["myform"] ["data_start_game"].value)+
         "&temp_start_game="+encodeURIComponent(document.forms["myform"] ["temp_start_game"].value);
 
     for (i=0;i<document.forms["myform"]["bot_num"].value;i++){
-        data=data+"&email_"+i+"="+encodeURIComponent(document.forms["myform"] ["email_"+i].value)
+        data=data+"&email_"+i+"="+encodeURIComponent(document.forms["myform"] ["email_"+i].value);
     }
 
     var http = new XMLHttpRequest();
@@ -22,14 +22,12 @@ function take_values(){
             textarea.innerHTML="";
             console.log(callback)
             textarea.innerHTML=textarea.innerHTML+callback;
-
         }
     }
-    console.log(data);
+
     http.open("POST", "http://localhost:8080/TRISSER_main_war_exploded/MyServlet", true);
     http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     http.send(data);
-
 
     return false;
 
