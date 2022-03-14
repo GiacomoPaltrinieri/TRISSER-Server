@@ -177,8 +177,8 @@ public class GameSettings {
             roomList = getTopicAccess(topics, users.get(i));
             singleMail.put("rooms", roomList);
             singleMail.put("room_instance", subRoomList);
-//            subRoomList = subRoomGenerator(users.size(), bot_instances);
-//            singleMail.put("room_instance", subRoomList);
+            subRoomList = subRoomGenerator(users.size(), bot_instances);
+            singleMail.put("room_instance", subRoomList);
 
 
             mails.add(singleMail.toString().replace("\\",""));
@@ -244,11 +244,14 @@ public class GameSettings {
     }
     /** Constructor that will be called by the my_servlet method**/
     public GameSettings(JSONObject rules, ArrayList<String> users) {
-        ArrayList<String> topics = setACLs(users);
+        System.out.println("ma come stai???");
+        topics = setACLs(users);
+        System.out.println(topics.toString());
         ArrayList<String> pwds = setPassword(users);
-        new MQTTPubPrint(); // test send message
+        //new MQTTPubPrint(); // test send message
         generateMailContent(users, topics, pwds, rules, 150);
         // writes to file the game and time of the game
+        new GamePreparation();
     }
     /**This function starts the broker**/
     public static void startBroker(){
