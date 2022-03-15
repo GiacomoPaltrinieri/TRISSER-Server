@@ -185,7 +185,7 @@ public class GameSettings {
 
             writeACLS(users, topics, subRoomList);
 
-            //SendMail.send(users.get(i), "GAME", mails.get(i));
+            SendMail.send(users.get(i), "GAME", mails.get(i));
             singleMail.clear();
         }
     }
