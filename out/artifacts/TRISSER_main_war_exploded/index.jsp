@@ -33,7 +33,7 @@
                     <label >Data inizio gioco:</label>
                     <input type="date" placeholder="DATA" name="data_start_game" required>
                     <label >Orario inizio gioco:</label>
-                    <input type="time" placeholder="TIME" name="temp_start_game" required>
+                    <input type="time" placeholder="TIME" step="1" name="temp_start_game" required>
                 </div>
             </div>
 

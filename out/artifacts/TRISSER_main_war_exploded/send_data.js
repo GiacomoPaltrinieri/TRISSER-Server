@@ -28,7 +28,6 @@ function take_values(){
     http.open("POST", "http://localhost:8080/TRISSER_main_war_exploded/MyServlet", true);
     http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     http.send(data);
-    console.log(data);
 
     return false;
 
