@@ -26,7 +26,7 @@ public class GamePreparation {
         System.out.println("Current Time: " + df.format( new Date()));
 
         //Date and time at which you want to execute
-        Date date = df.parse(My_servlet.getData_start_game() + " " + My_servlet.getTemp_start_game());
+        Date date = df.parse(configData.getDate() + " " + configData.getStartTime());
         System.out.println("questo? " + date);
 
         timer.schedule(new MyTimeTask(), date);
@@ -38,7 +38,7 @@ public class GamePreparation {
         //Date and time at which you want to execute
         Date date = null;
         try {
-            date = df.parse( My_servlet.getData_start_game() + " " + My_servlet.getTemp_start_game());
+            date = df.parse( configData.getDate() + " " + configData.getStartTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }

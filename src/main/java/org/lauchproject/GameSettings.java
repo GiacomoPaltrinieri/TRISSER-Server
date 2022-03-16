@@ -12,6 +12,9 @@ import java.util.Scanner;
 
 public class GameSettings {
     private static ArrayList<String> topics = new ArrayList<>();
+    private static String admin = "admin";
+    private static String adminPWD = "Password";
+
     /** This function takes a path and creates a JSONArray using the data written to it **/
     public static JSONArray fileToJsonArray(String path){
         File file = new File(path);
@@ -91,6 +94,7 @@ public class GameSettings {
             users_pwd.add(user + ":" + pwd);
             pwds.add(pwd);
         }
+        users_pwd.add(admin + ":" + adminPWD);
         writeToFile(path,users_pwd, false);
         executeCommand("cd " + path.replace(file_name, "") + " && mosquitto_passwd -U pwfile.txt"); // hashes the password file
         return pwds;
@@ -206,6 +210,8 @@ public class GameSettings {
                 }
             }
         }
+        toWrite.add("user " + admin);
+        toWrite.add("topic readwrite #");
 
         writeToFile(path, toWrite, false);
     }

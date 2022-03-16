@@ -23,13 +23,13 @@ public class MQTTPubPrint {
     public static final int qos = 0;
     private ArrayList<String> topics = GameSettings.getTopics();
     private static ArrayList<gameInstance> rooms = new ArrayList<>();
-    private JSONObject rules = My_servlet.getRules();
+    private JSONObject rules = configData.getJsonRules();
     private static MqttClient sampleClient;
     private ArrayList<PlayerPoints> playerWins = new ArrayList<>();
 
     public MQTTPubPrint() {
         GameSettings.startBroker();
-        for (String s : My_servlet.getUsers()) {
+        for (String s : configData.getUsers()) {
             onlineUsers.put(s, false);
             playerWins.add(new PlayerPoints(s));
         }// list of users
@@ -48,8 +48,8 @@ public class MQTTPubPrint {
         }
 
 
-        String time = My_servlet.getTemp_gioco_bot();
-        int room_instance = Integer.parseInt(My_servlet.getBot_istance());
+        String time = configData.getTime();
+        int room_instance = Integer.parseInt(configData.getBot_number());
 
         for (int i = 0; i < topics.size(); i++) rooms.add(new gameInstance(topics.get(i), room_instance, time));
 
@@ -108,7 +108,7 @@ public class MQTTPubPrint {
 
             //rules = getJSONfromFile("rules.txt");
             int connection_time;
-            connection_time = Integer.parseInt(My_servlet.getTemp_connessione());
+            connection_time = Integer.parseInt(configData.getConnection_time());
             connection_time = connection_time*1000; // conversion in seconds
 
             int finalTime = connection_time;
@@ -122,7 +122,7 @@ public class MQTTPubPrint {
                         System.out.println(finalTime);
                         checkForNotConnected(onlineUsers);
                         sendMessage("broadcast", "{\"game\":\"start\"}");
-                        int time = Integer.parseInt(My_servlet.getTemp_gioco_bot());
+                        int time = Integer.parseInt(configData.getTime());
                         time = time*1000;
                         startMethodAfterNMilliseconds(new Runnable() {
                             @Override
