@@ -165,7 +165,7 @@ public class GameSettings {
             }
         }
         //for (String topic : topics) System.out.println(topic);
-        System.out.println("CIAOOOO" + topics.toString());
+        System.out.println("piero" + topics.toString());
         return topics;
     }
     /** This function creates the string message that will be sent to every bot **/

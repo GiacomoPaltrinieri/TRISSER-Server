@@ -211,7 +211,7 @@ public class MQTTPubPrint {
 
         System.out.println(obj.toString());
         sendMessage("broadcast", obj.toString());
-        GameSettings.startBroker();
+        GameSettings.stopBroker();
     }
 
     /** This function sends an MQTT message **/
