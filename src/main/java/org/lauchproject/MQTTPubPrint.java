@@ -197,17 +197,9 @@ public class MQTTPubPrint {
         for (int i = 0; i < results.size(); i++)
             total += results.get(i);
 
-        for(int i = 0; i < this.onlineUsers.size(); i++) {
             this.onlineUsers.forEach((key, value) -> {
                 SendMail.send(key.toString(), "Results", results.toString());
             });
-        }
-
-        for (int i = 0; i < onlineUsers.size(); i++){
-            onlineUsers.forEach((key, value) -> {
-                SendMail.send(key.toString(), "Results", results.toString());
-                });
-        }
 
         System.out.println(obj.toString());
         sendMessage("broadcast", obj.toString());
