@@ -172,7 +172,7 @@ public class GameSettings {
     private static void generateMailContent(ArrayList<String> users, ArrayList<String> topics, ArrayList<String> pwds, JSONObject rules, int bot_instances) {
         ArrayList<String> mails = new ArrayList<>();
         JSONArray roomList;
-        int subRoomList = subRoomGenerator(users.size(), bot_instances);
+
         JSONObject singleMail = new JSONObject();
         for (int i = 0; i < users.size(); i++){
             singleMail.put("user", users.get(i));
@@ -180,14 +180,11 @@ public class GameSettings {
             singleMail.put("rules", rules);
             roomList = getTopicAccess(topics, users.get(i));
             singleMail.put("rooms", roomList);
-            singleMail.put("room_instance", subRoomList);
-            subRoomList = subRoomGenerator(users.size(), bot_instances);
-            singleMail.put("room_instance", subRoomList);
-
+            singleMail.put("room_instance", bot_instances);
 
             mails.add(singleMail.toString().replace("\\",""));
 
-            writeACLS(users, topics, subRoomList);
+            writeACLS(users, topics, bot_instances);
 
             SendMail.send(users.get(i), "GAME", mails.get(i));
             singleMail.clear();
@@ -224,6 +221,7 @@ public class GameSettings {
     }
     /** This function generates every single room where a game will be played (mail1_mail2/22 -> 0,1,2,3,4,5..21)**/
     private static int subRoomGenerator(int size, int bot_instances) {
+        System.out.println("numero di partite = " + bot_instances + "numero di bot = " + size + " = " + bot_instances/size);
         return bot_instances/size;
     }
 
@@ -255,7 +253,7 @@ public class GameSettings {
         System.out.println(topics.toString());
         ArrayList<String> pwds = setPassword(users);
         //new MQTTPubPrint(); // test send message
-        generateMailContent(users, topics, pwds, rules, 150);
+        generateMailContent(users, topics, pwds, rules, Integer.parseInt(configData.getBot_number()));
         // writes to file the game and time of the game
         new GamePreparation();
     }
