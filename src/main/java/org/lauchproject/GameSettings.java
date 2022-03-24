@@ -169,7 +169,7 @@ public class GameSettings {
         return topics;
     }
     /** This function creates the string message that will be sent to every bot **/
-    private static void generateMailContent(ArrayList<String> users, ArrayList<String> topics, ArrayList<String> pwds, JSONObject rules, int bot_instances) {
+    private static void generateMailContent(ArrayList<String> users, ArrayList<String> topics, ArrayList<String> pwds, JSONObject rules) {
         ArrayList<String> mails = new ArrayList<>();
         JSONArray roomList;
 
@@ -180,11 +180,11 @@ public class GameSettings {
             singleMail.put("rules", rules);
             roomList = getTopicAccess(topics, users.get(i));
             singleMail.put("rooms", roomList);
-            singleMail.put("room_instance", bot_instances);
+            singleMail.put("room_instance", GUI_CLI_Run.getBot_istance());
 
             mails.add(singleMail.toString().replace("\\",""));
 
-            writeACLS(users, topics, bot_instances);
+            writeACLS(users, topics, Integer.parseInt(GUI_CLI_Run.getBot_istance()));
 
             SendMail.send(users.get(i), "GAME", mails.get(i));
             singleMail.clear();
@@ -253,7 +253,7 @@ public class GameSettings {
         System.out.println(topics.toString());
         ArrayList<String> pwds = setPassword(users);
         //new MQTTPubPrint(); // test send message
-        generateMailContent(users, topics, pwds, rules, Integer.parseInt(configData.getBot_number()));
+        generateMailContent(users, topics, pwds, rules);
         // writes to file the game and time of the game
         new GamePreparation();
     }

@@ -13,7 +13,7 @@ public class configData {
     public static String fileName = "config.txt";
     public static String[] ruleLine = new String[2];
     private static String[] users;
-    private static String time, bot_number, date, connection_time, startTime;
+    private static String time, date, connection_time, startTime, room_instance;
     private static JSONObject obj = new JSONObject();
 
     public static void main(String[] args) {
@@ -39,8 +39,8 @@ public class configData {
                         connection_time = ruleLine[1];
                     else if (ruleLine[0].equals("date"))
                         date = ruleLine[1];
-                    else if (ruleLine[0].equals("bot_number"))
-                        bot_number = ruleLine[1];
+                    else if (ruleLine[0].equals("room_instance"))
+                        room_instance = ruleLine[1];
                     else if(ruleLine[0].equals("startTime"))
                         startTime = ruleLine[1];
                     obj = getJsonRules();
@@ -49,10 +49,9 @@ public class configData {
                 System.out.println("time" + time);
                 System.out.println(connection_time + "connection_time");
                 System.out.println("date" + date);
-                System.out.println("bot-num" + bot_number);
                 System.out.println("startTime" + startTime);
 
-                new GameSettings(obj, getUsers());
+                new GUI_CLI_Run("CLI");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -68,9 +67,7 @@ public class configData {
         return time;
     }
 
-    public static String getBot_number() {
-        return bot_number;
-    }
+    public static String getRoom_instance(){return room_instance;}
 
     public static String getDate() {
         return date;
@@ -87,7 +84,7 @@ public class configData {
     public static JSONObject getJsonRules(){
         obj.clear();
         obj.put("time", time);
-        obj.put("bot_number", bot_number);
+        obj.put("bot_number", room_instance);
         obj.put("connection_time", connection_time);
         obj.put("date", date + " " + startTime);
         return obj;
