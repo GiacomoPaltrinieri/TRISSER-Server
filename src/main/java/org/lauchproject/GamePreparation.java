@@ -1,6 +1,5 @@
 package org.lauchproject;
 
-import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,20 +15,8 @@ public class GamePreparation {
     private static class MyTimeTask extends TimerTask {
         public void run() {
             new MQTTPubPrint(); // start game
-            System.out.println("enters here");
             timer.cancel();
         }
-    }
-
-    public static void main(String[] args) throws ParseException {
-
-        System.out.println("Current Time: " + df.format( new Date()));
-
-        //Date and time at which you want to execute
-        Date date = df.parse(GUI_CLI_Run.getData_start_game() + " " + GUI_CLI_Run.getTemp_start_game());
-        System.out.println("questo? " + date);
-
-        timer.schedule(new MyTimeTask(), date);
     }
 
     public GamePreparation(){
@@ -42,7 +29,7 @@ public class GamePreparation {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println("questo qui? " + date);
+        System.out.println("date: " + date);
 
         timer.schedule(new MyTimeTask(), date);
     }

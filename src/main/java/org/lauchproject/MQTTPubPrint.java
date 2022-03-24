@@ -2,15 +2,11 @@ package org.lauchproject;
 
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +19,7 @@ public class MQTTPubPrint {
 
     public JSONObject onlineUsers = new JSONObject();
     public static final int qos = 0;
-    private ArrayList<String> topics = GameSettings.getTopics();
+    private final ArrayList<String> topics = GameSettings.getTopics();
     private static ArrayList<gameInstance> rooms = new ArrayList<>();
     private static MqttClient sampleClient;
     private ArrayList<PlayerPoints> playerWins = new ArrayList<>();
@@ -39,7 +35,7 @@ public class MQTTPubPrint {
         String time = GUI_CLI_Run.getTemp_gioco_bot();
         int room_instance = Integer.parseInt(GUI_CLI_Run.getBot_istance());
 
-        for (int i = 0; i < topics.size(); i++) rooms.add(new gameInstance(topics.get(i), room_instance, time));
+        for (String topic : topics) rooms.add(new gameInstance(topic, room_instance, time));
         connectToBroker();
         startConnectionPhase();
     }
@@ -52,19 +48,11 @@ public class MQTTPubPrint {
         }
         System.out.println("Connected");
 
-        //rules = getJSONfromFile("rules.txt");
         int connection_time;
         connection_time = Integer.parseInt(GUI_CLI_Run.getTemp_connessione());
         connection_time = connection_time*1000; // conversion in seconds
 
-        int finalConnection_time = connection_time;
-        startMethodAfterNMilliseconds(new Runnable() {
-            @Override
-            public void run() {
-                // myMethod(); // Your method goes here.
-                startGamePreparationPhase();
-            }
-        }, connection_time); // connection time is over
+        startMethodAfterNMilliseconds(this::startGamePreparationPhase, connection_time); // connection time is over
     }
 
     private void startGamePreparationPhase() {
@@ -82,12 +70,7 @@ public class MQTTPubPrint {
         sendMessage("broadcast", "{\"game\":\"start\"}");
         int time = Integer.parseInt(GUI_CLI_Run.getTemp_gioco_bot());
         time = time*1000;
-        startMethodAfterNMilliseconds(new Runnable() {
-            @Override
-            public void run() {
-                gameOver();
-            }
-        }, time);
+        startMethodAfterNMilliseconds(this::gameOver, time);
     }
 
     private void setClientCallBacks() {
@@ -99,30 +82,30 @@ public class MQTTPubPrint {
                 if (IsJson.isJSONValid(msg)){
                     JSONParser parser = new JSONParser();
                     JSONObject json = (JSONObject) parser.parse(msg);
-                    String user;
-                    // controlla le topic, cambia online perchè devi riconoscere l'user
+
                     if(!Objects.isNull(json) && json.containsKey("move")){
-                        if (topics.contains(subStringTopic(topic, "/", getTOPIC)));
-                        {
-                            for (int i = 0; i < topics.size(); i++){
-                                if (subStringTopic(topic, "/", getTOPIC).equals(rooms.get(i).getTopic())){
-                                    rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getUSER),Integer.parseInt((String) json.get("move")));
-                                }
-                            }
-                        }
+                        moveReceived(topic, json);
                     }else if (topic.contains("online/")){
-                        user = topic.replace("online/", "");
-                        onlineUsers.replace(user, true); //user is online
-                        System.out.println(user + " -> True");
+                        onlineUsers.replace(topic.replace("online/", ""), true); //user is online
+                        System.out.println(topic.replace("online/", "") + " -> True");
                     }
                 }else{
-                    System.out.println("ERRORE; MESSAGGIO NON IN FORMATO JSON");
+                    System.out.println("ERROR; NOT A JSON MESSAGE");
                 }
-
             }
 
             public void deliveryComplete(IMqttDeliveryToken token) {}
         });
+    }
+
+    private void moveReceived(String topic, JSONObject json) {
+        if (topics.contains(subStringTopic(topic, "/", getTOPIC))){ //if the topic is valid (present in the list of topic)
+            for (int i = 0; i < topics.size(); i++){
+                if (subStringTopic(topic, "/", getTOPIC).equals(rooms.get(i).getTopic())){
+                    rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getUSER),Integer.parseInt((String) json.get("move")));
+                }
+            }
+        }
     }
 
     private void connectToBroker() {
@@ -154,11 +137,11 @@ public class MQTTPubPrint {
         }
     }
 
-    /** Once gametime is over this function will generate the results and send them to the clients **/
+    /** Once game time is over this function will generate the results and send them to the clients **/
     private void gameOver() {
         endNotOverGames(); // if some games are not over this will end them
         addPoints(); // add points to players who won games
-        sendRanking(); // send an mqtt message cointaining the rankings
+        sendRanking(); // send a mqtt message containing the rankings
         GameSettings.stopBroker();
         mailResults(); // send game results via mail
         writeResults(); // write the results of the game to the file
@@ -173,19 +156,16 @@ public class MQTTPubPrint {
 
 
 
-        System.out.println(obj.toString());
+        System.out.println(obj);
         sendMessage("broadcast", obj.toString());
     }
 
     private void mailResults() {
-        String total="";
-        for (int i = 0; i < playerWins.size(); i++)
-            total += playerWins.get(i).returnValue()+"\n";
+        StringBuilder total= new StringBuilder();
+        for (PlayerPoints playerWin : playerWins) total.append(playerWin.returnValue()).append("\n");
 
-        String finalTotal = total;
-        this.onlineUsers.forEach((key, value) -> {
-            SendMail.send(key.toString(), "Results", finalTotal);
-        });
+        String finalTotal = total.toString();
+        this.onlineUsers.forEach((key, value) -> SendMail.send(key.toString(), "Results", finalTotal));
     }
 
     private void setRankingOrder() {
@@ -202,21 +182,21 @@ public class MQTTPubPrint {
     }
 
     private void addPoints() {
-        for (int i = 0; i < playerWins.size(); i++){
-            for (int j = 0; j < rooms.size(); j++){
-                for (int k = 0; k < rooms.get(j).getSingle_rooms().size(); k++){
-                    if (rooms.get(j).getSingle_rooms().get(k).getWinner().equals(playerWins.get(i).getPlayer()))
-                        playerWins.get(i).addPoint();
+        for (PlayerPoints playerWin : playerWins) {
+            for (gameInstance room : rooms) {
+                for (int k = 0; k < room.getSingle_rooms().size(); k++) {
+                    if (room.getSingle_rooms().get(k).getWinner().equals(playerWin.getPlayer()))
+                        playerWin.addPoint();
                 }
             }
         }
     }
 
     private void endNotOverGames() {
-        for (int i = 0; i < rooms.size(); i++){
-            for (int j = 0; j < rooms.get(i).getSingle_rooms().size(); j++){
-                if (rooms.get(i).getSingle_rooms().get(j).getWinner().equals("StillPlaying"))
-                    rooms.get(i).getSingle_rooms().get(j).setLoser();
+        for (gameInstance room : rooms) {
+            for (int j = 0; j < room.getSingle_rooms().size(); j++) {
+                if (room.getSingle_rooms().get(j).getWinner().equals("StillPlaying"))
+                    room.getSingle_rooms().get(j).setLoser();
             }
         }
     }
@@ -225,28 +205,27 @@ public class MQTTPubPrint {
         File file = new File("Results.txt");
         try {
             if (!file.exists())
-                file.createNewFile();
+                System.out.println(file.createNewFile());
             else{
                 Scanner sc = new Scanner(file);
                 while(sc.hasNext())
                     oldResults.add(new PlayerPoints(sc.next(), "result"));
 
-                for (int i = 0; i < playerWins.size(); i++){
-                    for (int j = 0; j < oldResults.size(); j++){
-                        if (playerWins.get(i).getPlayer().equals(oldResults.get(j).getPlayer())) {
-                            playerWins.get(i).setWins(playerWins.get(i).getWins() + oldResults.get(j).getWins());
+                for (PlayerPoints playerWin : playerWins) {
+                    for (int j = 0; j < oldResults.size(); j++) {
+                        if (playerWin.getPlayer().equals(oldResults.get(j).getPlayer())) {
+                            playerWin.setWins(playerWin.getWins() + oldResults.get(j).getWins());
                             oldResults.remove(j);
                         }
                     }
                 }
                 if (oldResults.size() > 0)
-                    for (int i=0; i < oldResults.size(); i++)
-                        playerWins.add(oldResults.get(i));
+                    playerWins.addAll(oldResults);
             }
 
             FileWriter fw = new FileWriter(file);
-            for (int i = 0; i < playerWins.size(); i++){
-                fw.write(playerWins.get(i).returnValue()+"\n");
+            for (PlayerPoints playerWin : playerWins) {
+                fw.write(playerWin.returnValue() + "\n");
             }
             fw.flush();
             fw.close();
@@ -270,20 +249,18 @@ public class MQTTPubPrint {
     /** This function checks whether a user is connected or not **/
     private static void checkForNotConnected(JSONObject onlineUsers) {
        onlineUsers.forEach((key, value) -> {
-           System.out.println("userino : " + key);
            if (value.toString().equals("false")) notConnected(key.toString()); //value == false, client not connected
        });
     }
 
-    /** This function sends a message containing informations about not connected users to every connected user  **/
+    /** This function sends a message containing data about not connected users to every connected user  **/
     private static void notConnected(String user) {
         System.out.println("user" + user + " not connected");
-        for (int i = 0; i < rooms.size(); i ++)
-            if (rooms.get(i).isPlayedBy(user)){
-                System.out.println(rooms.get(i).getTopic() + " -> " + user + " has lost");
-                rooms.get(i).hasLost(user);
+        for (gameInstance room : rooms)
+            if (room.isPlayedBy(user)) {
+                System.out.println(room.getTopic() + " -> " + user + " has lost");
+                room.hasLost(user);
             }
-        System.out.println("in teoria dovrebbe inviarlo sto messaggio");
         JSONObject obj = new JSONObject();
         obj.put("not_connected", user);
         sendMessage("broadcast", obj.toString());
@@ -300,12 +277,7 @@ public class MQTTPubPrint {
 
     /** This function waits for a specific time to execute a specific function **/
     public static void startMethodAfterNMilliseconds(Runnable runnable, int milliSeconds) {
-        Timer timer = new Timer(milliSeconds, new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                runnable.run();
-            }
-        });
+        Timer timer = new Timer(milliSeconds, e -> runnable.run());
         timer.setRepeats(false); // Only execute once
         timer.start();
     }

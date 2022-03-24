@@ -265,35 +265,4 @@ public class GameSettings {
     public static void stopBroker(){
         System.out.println(executeCommand("Taskkill /IM \"mosquitto.exe\" /F")); // Closes the mosquitto broker
     }
-    /** Main method **/
-   /* public static void main(String[] args) {
-        ArrayList<String> users = new ArrayList<>();
-        JSONObject rules = new JSONObject();
-        rules.put("time", 20);
-        rules.put("room_instance", 150);
-        rules.put("connection_time", 20);
-        rules.put("date", "2002-08-22 15:30:22");
-
-        users.add("TRISSER.server@gmail.com");
-        users.add("giaco.paltri@gmail.com");             // list of users
-        users.add("abdullah.ali@einaudicorreggio.it");
-
-        ArrayList<String> topics = setACLs(users);
-        ArrayList<String> pwds = setPassword(users);
-        System.out.println(executeCommand("cd C:\\Program Files\\mosquitto\\ && Net start Mosquitto")); // Starts the mosquitto broker
-        //new MQTTPubPrint(); // test send message
-        System.out.println(executeCommand("Taskkill /IM \"mosquitto.exe\" /F")); // Closes the mosquitto broker
-        generateMailContent(users, topics, pwds, rules, 150);
-
-        String path = "rules.txt"; // writes rules in a file
-        ArrayList<String> rulesList = new ArrayList<>();
-        rulesList.add(rules.toString());
-        writeToFile(path, rulesList, false);
-
-        path = "topics.txt"; // writes topics in a file
-        ArrayList<String> topicsList = new ArrayList<>();
-        for (String s : topics)
-            topicsList.add(s);
-        writeToFile(path, topicsList, false);
-    }*/
 }
