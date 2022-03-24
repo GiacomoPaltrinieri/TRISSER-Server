@@ -19,7 +19,7 @@ public class gameInstance {
     /** Methods **/
 
     /** Constructor **/
-    public gameInstance( String topic, int room_number, String time) {
+    public gameInstance(String topic, int room_number, String time) {
         this.topic = subStringTopic(topic, "/", getTOPIC);
         this.room_number = room_number;
 
@@ -49,14 +49,6 @@ public class gameInstance {
             }
         }
     }
-
-//    /** Given a specific topic this function returns the user that has sent the message **/
-//    public String getUser(String topic){
-//        int lastIndexOf = topic.lastIndexOf( "/" );
-//        String user = topic.substring( lastIndexOf + 1 );
-//        System.out.print(user);
-//        return user;
-//    }
 
     /** subtracts data from the topic **/
     public static String subStringTopic(String string, String splitChars, int index){

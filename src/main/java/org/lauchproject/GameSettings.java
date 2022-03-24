@@ -8,30 +8,14 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.util.ListIterator;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class GameSettings {
     private static ArrayList<String> topics = new ArrayList<>();
-    private static String admin = "admin";
-    private static String adminPWD = "Password";
+    private static final String admin = "admin";
+    private static final String adminPWD = "Password";
 
-    /** This function takes a path and creates a JSONArray using the data written to it **/
-    public static JSONArray fileToJsonArray(String path){
-        File file = new File(path);
-        Scanner line = null;
-        try {
-            line = new Scanner(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        JSONArray userInfo = new JSONArray();
-
-        while (line.hasNext()){
-            userInfo.add(line.nextLine());
-        }
-
-        return userInfo;
-    }
     /** This method takes a String containing one or more commands (command -> to use more commands, just insert command1 && command2...) to execute in the CMD, the result String you get in return is the output of the command you would see on the CMD**/
     public static String executeCommand(String command) {
         String line;
@@ -104,7 +88,7 @@ public class GameSettings {
         File file = new File(path); // Creates File object with the specified path. The path must include the filename
         if (!file.exists()) {
             try {
-                file.createNewFile(); // generates a new file, in case it's not present
+                System.out.println(file.createNewFile());// generates a new file, in case it's not present
                 System.out.println("creating file");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -112,11 +96,6 @@ public class GameSettings {
             }
         }
         FileWriter fw = null;
-        try {
-            fw = new FileWriter(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         try {
             fw = new FileWriter(file.getAbsoluteFile(), append);
         } catch (IOException e) {
@@ -126,14 +105,14 @@ public class GameSettings {
         ListIterator<String> line = lines.listIterator();
         while (line.hasNext()) {
             try {
-                fw.write(line.next() + "\n"); // writes single line
+                Objects.requireNonNull(fw).write(line.next() + "\n"); // writes single line
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("something went wrong while writing on the file");
             }
         }
         try {
-            fw.flush();
+            Objects.requireNonNull(fw).flush();
             fw.close(); // closes the FileWriter
         } catch (IOException e) {
             System.out.println("something went wrong while closing the file");
@@ -142,16 +121,16 @@ public class GameSettings {
     /** This method sets ACL's for every user (topic restriction) **/
     private static ArrayList<String> setACLs(ArrayList<String> users) {
         boolean existing_topic = false;
-        JSONArray topics = new JSONArray();
+        ArrayList<String> topics = new ArrayList<>();
         for (int i = 0; i < users.size() - 1; i++)
         {
             for (String user : users) {
                 if (!users.get(i).equals(user)) // the 2 users can't be equal
                 {
-                    if (topics.size() != 0) // only if it's not the first topic
+                    if (topics.size() != 0)
                     {
                         for (int j = 0; j < topics.size(); j++) {
-                            if (topics.get(j).toString().contains(users.get(i)) && topics.get(j).toString().contains(user)) {//contains()
+                            if (topics.get(j).contains(users.get(i)) && topics.get(j).contains(user)) {
                                 existing_topic = true;
                                 break;
                             }
@@ -165,12 +144,10 @@ public class GameSettings {
             }
         }
         //for (String topic : topics) System.out.println(topic);
-        System.out.println("piero" + topics.toString());
         return topics;
     }
     /** This function creates the string message that will be sent to every bot **/
     private static void generateMailContent(ArrayList<String> users, ArrayList<String> topics, ArrayList<String> pwds, JSONObject rules) {
-        ArrayList<String> mails = new ArrayList<>();
         JSONArray roomList;
 
         JSONObject singleMail = new JSONObject();
@@ -182,15 +159,11 @@ public class GameSettings {
             singleMail.put("rooms", roomList);
             singleMail.put("room_instance", GUI_CLI_Run.getBot_istance());
 
-            mails.add(singleMail.toString().replace("\\",""));
-
-            writeACLS(users, topics, Integer.parseInt(GUI_CLI_Run.getBot_istance()));
-
-            SendMail.send(users.get(i), "GAME", mails.get(i));
+            SendMail.send(users.get(i), "GAME", singleMail.toString().replace("\\",""));
             singleMail.clear();
         }
     }
-    /** This function writes the ACLS for every user on the config file **/
+    /** This function writes the ACL's for every user on the config file **/
     private static void writeACLS(ArrayList<String> users, ArrayList<String> topics, int subRoomList) {
         JSONArray accessedTopics;
         String separator = System.getProperty("file.separator");
@@ -212,27 +185,6 @@ public class GameSettings {
 
         writeToFile(path, toWrite, false);
     }
-    /** returns the other user given a topic and a user**/
-    private static String getOtherUser(String user, String topic) {
-        String otherUser;
-        otherUser = topic.replace(user, "");
-        otherUser = otherUser.replace("_", "");
-        return otherUser;
-    }
-    /** This function generates every single room where a game will be played (mail1_mail2/22 -> 0,1,2,3,4,5..21)**/
-    private static int subRoomGenerator(int size, int bot_instances) {
-        System.out.println("numero di partite = " + bot_instances + "numero di bot = " + size + " = " + bot_instances/size);
-        return bot_instances/size;
-    }
-
-    /**FUNCTION TEMPORARILY DEPRECATED**/
-///** This function returns the set of subroom accessible to every player [1,2,3,4,5,6,7,8,9...] **/
-//    private static JSONArray subRoomGenerator(int size, int bot_instances) {
-//        JSONArray subRoomList = new JSONArray();
-//        for (int i = 0; i < bot_instances/size; i++)
-//            subRoomList.add(i);
-//        return subRoomList;
-//    }
 
     public static ArrayList<String> getTopics(){
         return topics;
@@ -248,13 +200,10 @@ public class GameSettings {
     }
     /** Constructor that will be called by the my_servlet method**/
     public GameSettings(JSONObject rules, ArrayList<String> users) {
-        System.out.println("ma come stai???");
         topics = setACLs(users);
-        System.out.println(topics.toString());
         ArrayList<String> pwds = setPassword(users);
-        //new MQTTPubPrint(); // test send message
+        writeACLS(users, topics, Integer.parseInt(GUI_CLI_Run.getBot_istance()));
         generateMailContent(users, topics, pwds, rules);
-        // writes to file the game and time of the game
         new GamePreparation();
     }
     /**This function starts the broker**/
