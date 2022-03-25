@@ -1,5 +1,10 @@
-
-/**Function for Sending data to MyServlet whitout Reloading page**/
+/**
+ * Function for Sending data to MyServlet whitout Reloading page
+ * create a post request(XMLHttpRequest) for My_servlet and send Rules in the body
+ * @author Ali
+ * @version 1.0
+ * @returns {boolean}
+ */
 function take_values(){
 
     var data="bot_istance="+encodeURIComponent(document.forms["myform"] ["bot_istance"].value)+
@@ -14,7 +19,10 @@ function take_values(){
     }
 
     var http = new XMLHttpRequest();
-
+    /**
+     * Get My_servlet responce back
+     * add the responce to the rule setting page(index.jsp)
+     */
     http.onreadystatechange = function() {
         if (http.readyState === 4) {
             var callback=(http.response);
@@ -33,8 +41,10 @@ function take_values(){
 
 }
 
-/**Function to create Multiple input tags for the email input**/
-
+/**
+ *Function to create Multiple input tags for the email input
+ * the tag number is determinated according to the bot numbers
+ */
 function create_input(){
     var cont=document.forms["myform"]["bot_num"].value;
     var container=document.getElementById("input_cont")

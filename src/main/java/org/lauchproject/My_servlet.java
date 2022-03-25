@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-
+/**
+ * Get the rules for the tournament from the front-end
+ * @author Ali
+ * @version 4.0
+ */
 @WebServlet(name = "MyServlet",value ="/MyServlet")
 public class My_servlet extends HttpServlet{
     private static ArrayList<String> users=new ArrayList<>();
@@ -14,38 +18,76 @@ public class My_servlet extends HttpServlet{
     private static JSONObject rules = new JSONObject();
     private static String bot_num,temp_gioco_bot,temp_connessione,data_start_game,temp_start_game,bot_istance;
 
+    /**
+     * User Getter
+     * @return ArrayList of Strings
+     */
     public static ArrayList<String> getUsers() {
         return users;
     }
 
+    /**
+     * Rules Getter
+     * @return JSONObject
+     */
     public static JSONObject getRules() {
         return rules;
     }
 
+    /**
+     * Bot numer Getter
+     * @return String
+     */
     public static String getBot_num() {
         return bot_num;
     }
 
+    /**
+     * Time of Single match Getter
+     * @return String
+     */
     public static String getTemp_gioco_bot() {
         return temp_gioco_bot;
     }
 
+    /**
+     * Bot Connectio time Getter
+     * @return String
+     */
     public static String getTemp_connessione() {
         return temp_connessione;
     }
 
+    /**
+     * Tournament starting time getter
+     * @return String
+     */
     public static String getData_start_game() {
         return data_start_game;
     }
 
+    /**
+     * Tournament starting time getter
+     * @return String
+     */
     public static String getTemp_start_game() {
         return temp_start_game;
     }
 
+    /**
+     * Bot istance number(total matches of the tournament) Getter
+     * @return
+     */
     public static String getBot_istance() {
         return bot_istance;
     }
 
+    /**
+     * Post method to get Tournaments rules from the front-end request body
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
@@ -78,6 +120,9 @@ public class My_servlet extends HttpServlet{
 
     }
 
+    /**
+     * Killing the servlet istance
+     */
     public void destroy() {
     }
 }
