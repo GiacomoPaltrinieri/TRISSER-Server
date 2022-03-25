@@ -25,6 +25,7 @@ import java.util.Scanner;
  * </ul>
  *
  * <h4>Note that the different fields defined in the file can be written in any order the user wishes</h4>
+ *
  * @author Giacomino
  * @see GUI_CLI_Run
  */
@@ -40,15 +41,15 @@ public class configData {
     private static String[] players;
     /** <strong>temp_gioco_bot</strong> contains the available time that will be given to every user to play **/
     private static String temp_gioco_bot;
-    /** <strong>temp_connessione</strong> contains the available time that will be given to every user to connect to the broker and send an online message **/a
+    /** <strong>temp_connessione</strong> contains the available time that will be given to every user to connect to the broker and send an online message **/
     private static String temp_connessione;
-    /** <strong>temp_gioco_bot</strong> contains the date at which the tournament will start **/
+    /** <strong>data_start_game</strong> contains the date at which the tournament will start **/
     private static String data_start_game;
-    /** <strong>temp_gioco_bot</strong> contains the time at which the tournament will start **/
+    /** <strong>temp_start_game</strong> contains the time at which the tournament will start **/
     private static String temp_start_game;
-    /** <strong>temp_gioco_bot</strong> contains the number of games a bot will have to play with every other bot **/
+    /** <strong>bot_instance</strong> contains the number of games a bot will have to play with every other bot **/
     private static String bot_instance;
-    /** <strong>temp_gioco_bot</strong> temporary Object used by the <strong>getJsonRules</strong> method to return the JSONObject Object**/
+    /** <strong>obj</strong> temporary Object used by the <strong>getJsonRules</strong> method to return the JSONObject Object**/
     private static JSONObject obj = new JSONObject();
 
     /**
@@ -69,7 +70,7 @@ public class configData {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("creo file");
+            System.out.println("creating file...");
         }
         else{
             try {
@@ -103,7 +104,6 @@ public class configData {
 
         }
     }
-
     /**
      * The user has to write the configuration file path.
      *
@@ -134,15 +134,14 @@ public class configData {
     /** ---------------------------- Getters ---------------------------- **/
 
     /**
-     * Getter method used to return the list of players playing in a tournament.
-     * @return Returns the list of different players in a String ArrayList.
+     * Getter method used to return the list of players participating in the tournament.
+     * @return Returns the list of different players in an ArrayList of Strings.
      */
     public static ArrayList<String> getPlayers() {
         ArrayList<String> playersList = new ArrayList<>();
         Collections.addAll(playersList, players);
         return playersList;
     }
-
     /**
      * Getter method used to return the game time of a tournament.
      * @return Returns the amount of time in seconds as a String Object.
@@ -150,7 +149,6 @@ public class configData {
     public static String getTemp_gioco_bot() {
         return temp_gioco_bot;
     }
-
     /**
      * Getter method used to return the connection time granted to the different players in a tournament.
      * @return Returns the amount of time in seconds as a String Object.
@@ -182,9 +180,6 @@ public class configData {
     /**
      * Getter method used to return the <strong>set of rules</strong> as a Json.
      * @return Returns a set of rules necessary for the mail generation.
-     *
-     * @see GUI_CLI_Run
-     * @see GameSettings
      */
     public static JSONObject getJsonRules(){
         obj.clear();
