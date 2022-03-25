@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class gameInstance {
     public static final int getTOPIC=0;
     public static final int getINSTANCE=1;
-    public static final int getUSER=2;
+    public static final int getPLAYER=2;
     /** Attributes **/
     private String topic;
     private int room_number;
@@ -54,7 +54,7 @@ public class gameInstance {
     public static String subStringTopic(String string, String splitChars, int index){
         //index = getTOPIC || (0) -> topic
         //index = getINSTANCE || (1) -> instance
-        //index = getUSER || (2) -> user
+        //index = getPLAYER || (2) -> user
         String[] parts = string.split(splitChars);
         return parts[index];
     }

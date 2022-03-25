@@ -66,20 +66,20 @@ public class GameSettings {
         return sb.toString();
     }
     /** This function generates a password for bots to log into Mosquitto **/
-    private static ArrayList<String> setPassword(ArrayList<String> users) {
-        ArrayList<String> users_pwd = new ArrayList<>();
+    private static ArrayList<String> setPassword(ArrayList<String> players) {
+        ArrayList<String> players_pwd = new ArrayList<>();
         ArrayList<String> pwds = new ArrayList<>();
         String file_name = "pwfile.txt";
         String separator = System.getProperty("file.separator");
         String path = "C:" + separator + "Program Files" + separator + "mosquitto" + separator + file_name;
-        for (String user : users) {
+        for (String player : players) {
             String pwd = generateRandomPassword(8);
 
-            users_pwd.add(user + ":" + pwd);
+            players_pwd.add(player + ":" + pwd);
             pwds.add(pwd);
         }
-        users_pwd.add(admin + ":" + adminPWD);
-        writeToFile(path,users_pwd, false);
+        players_pwd.add(admin + ":" + adminPWD);
+        writeToFile(path,players_pwd, false);
         executeCommand("cd " + path.replace(file_name, "") + " && mosquitto_passwd -U pwfile.txt"); // hashes the password file
         return pwds;
     }
@@ -118,28 +118,28 @@ public class GameSettings {
             System.out.println("something went wrong while closing the file");
         }
     }
-    /** This method sets ACL's for every user (topic restriction) **/
-    private static ArrayList<String> setACLs(ArrayList<String> users) {
+    /** This method sets ACL's for every player (topic restriction) **/
+    private static ArrayList<String> setACLs(ArrayList<String> players) {
         boolean existing_topic = false;
         ArrayList<String> topics = new ArrayList<>();
-        for (int i = 0; i < users.size() - 1; i++)
+        for (int i = 0; i < players.size() - 1; i++)
         {
-            for (String user : users) {
-                if (!users.get(i).equals(user)) // the 2 users can't be equal
+            for (String player : players) {
+                if (!players.get(i).equals(player)) // the 2 players can't be equal
                 {
                     if (topics.size() != 0)
                     {
-                        for (int j = 0; j < topics.size(); j++) {
-                            if (topics.get(j).contains(users.get(i)) && topics.get(j).contains(user)) {
+                        for (String topic : topics) {
+                            if (topic.contains(players.get(i)) && topic.contains(player)) {
                                 existing_topic = true;
                                 break;
                             }
                         }
                         if (!existing_topic)
-                            topics.add(users.get(i) + "_" + user);
+                            topics.add(players.get(i) + "_" + player);
                         existing_topic = false;
                     } else
-                        topics.add(users.get(i) + "_" + user);
+                        topics.add(players.get(i) + "_" + player);
                 }
             }
         }
@@ -147,36 +147,36 @@ public class GameSettings {
         return topics;
     }
     /** This function creates the string message that will be sent to every bot **/
-    private static void generateMailContent(ArrayList<String> users, ArrayList<String> topics, ArrayList<String> pwds, JSONObject rules) {
+    private static void generateMailContent(ArrayList<String> players, ArrayList<String> topics, ArrayList<String> pwds, JSONObject rules) {
         JSONArray roomList;
 
         JSONObject singleMail = new JSONObject();
-        for (int i = 0; i < users.size(); i++){
-            singleMail.put("user", users.get(i));
+        for (int i = 0; i < players.size(); i++){
+            singleMail.put("user", players.get(i));
             singleMail.put("pwd", pwds.get(i));
             singleMail.put("rules", rules);
-            roomList = getTopicAccess(topics, users.get(i));
+            roomList = getTopicAccess(topics, players.get(i));
             singleMail.put("rooms", roomList);
-            singleMail.put("room_instance", GUI_CLI_Run.getBot_istance());
+            singleMail.put("room_instance", GUI_CLI_Run.getBot_instance());
 
-            SendMail.send(users.get(i), "GAME", singleMail.toString().replace("\\",""));
+            SendMail.send(players.get(i), "GAME", singleMail.toString().replace("\\",""));
             singleMail.clear();
         }
     }
-    /** This function writes the ACL's for every user on the config file **/
-    private static void writeACLS(ArrayList<String> users, ArrayList<String> topics, int subRoomList) {
+    /** This function writes the ACL's for every player on the config file **/
+    private static void writeACLS(ArrayList<String> players, ArrayList<String> topics, int subRoomList) {
         JSONArray accessedTopics;
         String separator = System.getProperty("file.separator");
         String path = "C:" + separator + "Program Files" + separator + "mosquitto" + separator + "aclfile.txt";
         ArrayList<String> toWrite = new ArrayList<>();
 
-        for (String user:users){ // for every user
-            toWrite.add("user " + user);
-            accessedTopics = getTopicAccess(topics,user);
-            for (int i = 0; i < accessedTopics.size(); i++){
+        for (String player:players){ // for every player
+            toWrite.add("user " + player);
+            accessedTopics = getTopicAccess(topics,player);
+            for (Object accessedTopic : accessedTopics) {
                 for (int j = 0; j < subRoomList; j++) {
-                    toWrite.add("topic readwrite " + accessedTopics.get(i) + "/" + j + "/" + user);
-                    toWrite.add("topic read " + accessedTopics.get(i) + "/" + j + "/#");
+                    toWrite.add("topic readwrite " + accessedTopic + "/" + j + "/" + player);
+                    toWrite.add("topic read " + accessedTopic + "/" + j + "/#");
                 }
             }
         }
@@ -190,20 +190,20 @@ public class GameSettings {
         return topics;
     }
 
-    /** This function returns the topics that a user has access to **/
-    private static JSONArray getTopicAccess(ArrayList<String> topics, String user) {
+    /** This function returns the topics that a player has access to **/
+    private static JSONArray getTopicAccess(ArrayList<String> topics, String player) {
         JSONArray permittedTopics = new JSONArray();
         for (String topic : topics)
-            if (topic.contains(user))
+            if (topic.contains(player))
                 permittedTopics.add(topic);
         return permittedTopics;
     }
     /** Constructor that will be called by the my_servlet method**/
-    public GameSettings(JSONObject rules, ArrayList<String> users) {
-        topics = setACLs(users);
-        ArrayList<String> pwds = setPassword(users);
-        writeACLS(users, topics, Integer.parseInt(GUI_CLI_Run.getBot_istance()));
-        generateMailContent(users, topics, pwds, rules);
+    public GameSettings(JSONObject rules, ArrayList<String> players) {
+        topics = setACLs(players);
+        ArrayList<String> pwds = setPassword(players);
+        writeACLS(players, topics, Integer.parseInt(GUI_CLI_Run.getBot_instance()));
+        generateMailContent(players, topics, pwds, rules);
         new GamePreparation();
     }
     /**This function starts the broker**/

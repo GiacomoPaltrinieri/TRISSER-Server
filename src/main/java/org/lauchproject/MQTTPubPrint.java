@@ -17,7 +17,7 @@ import static org.lauchproject.gameInstance.*;
 
 public class MQTTPubPrint {
 
-    public JSONObject onlineUsers = new JSONObject();
+    public JSONObject onlinePlayers = new JSONObject();
     public static final int qos = 0;
     private final ArrayList<String> topics = GameSettings.getTopics();
     private static ArrayList<gameInstance> rooms = new ArrayList<>();
@@ -27,13 +27,13 @@ public class MQTTPubPrint {
 
     public MQTTPubPrint() {
         GameSettings.startBroker();
-        for (String s : GUI_CLI_Run.getUsers()) {
-            onlineUsers.put(s, false);
+        for (String s : GUI_CLI_Run.getPlayers()) {
+            onlinePlayers.put(s, false);
             playerWins.add(new PlayerPoints(s));
-        }// list of users
+        }// list of players
 
         String time = GUI_CLI_Run.getTemp_gioco_bot();
-        int room_instance = Integer.parseInt(GUI_CLI_Run.getBot_istance());
+        int room_instance = Integer.parseInt(GUI_CLI_Run.getBot_instance());
 
         for (String topic : topics) rooms.add(new gameInstance(topic, room_instance, time));
         connectToBroker();
@@ -59,7 +59,7 @@ public class MQTTPubPrint {
         try {
             sampleClient.subscribe("#"); // now moves can be sent
             sampleClient.unsubscribe("online/#");
-            checkForNotConnected(onlineUsers);
+            checkForNotConnected(onlinePlayers);
             startGamePhase();
         } catch (MqttException e) {
             e.printStackTrace();
@@ -83,13 +83,11 @@ public class MQTTPubPrint {
                     JSONParser parser = new JSONParser();
                     JSONObject json = (JSONObject) parser.parse(msg);
 
-                    if(!Objects.isNull(json) && json.containsKey("move")){
+                    if(!Objects.isNull(json) && json.containsKey("move"))
                         moveReceived(topic, json);
-                    }else if (topic.contains("online/")){
-                        onlineUsers.replace(topic.replace("online/", ""), true); //user is online
-                        System.out.println(topic.replace("online/", "") + " -> True");
-                    }
-                }else{
+                    else if (topic.contains("online/"))
+                       onlinePlayerMessage(topic.replace("online/", ""));
+                }else{ // not a valid message
                     System.out.println("ERROR; NOT A JSON MESSAGE");
                 }
             }
@@ -98,11 +96,15 @@ public class MQTTPubPrint {
         });
     }
 
+    private void onlinePlayerMessage(String player) {
+        onlinePlayers.replace(player, true); //player is online
+    }
+
     private void moveReceived(String topic, JSONObject json) {
         if (topics.contains(subStringTopic(topic, "/", getTOPIC))){ //if the topic is valid (present in the list of topic)
             for (int i = 0; i < topics.size(); i++){
                 if (subStringTopic(topic, "/", getTOPIC).equals(rooms.get(i).getTopic())){
-                    rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getUSER),Integer.parseInt((String) json.get("move")));
+                    rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getPLAYER),Integer.parseInt((String) json.get("move")));
                 }
             }
         }
@@ -165,7 +167,7 @@ public class MQTTPubPrint {
         for (PlayerPoints playerWin : playerWins) total.append(playerWin.returnValue()).append("\n");
 
         String finalTotal = total.toString();
-        this.onlineUsers.forEach((key, value) -> SendMail.send(key.toString(), "Results", finalTotal));
+        this.onlinePlayers.forEach((key, value) -> SendMail.send(key.toString(), "Results", finalTotal));
     }
 
     private void setRankingOrder() {
@@ -246,23 +248,23 @@ public class MQTTPubPrint {
         }
     }
 
-    /** This function checks whether a user is connected or not **/
-    private static void checkForNotConnected(JSONObject onlineUsers) {
-       onlineUsers.forEach((key, value) -> {
+    /** This function checks whether a player is connected or not **/
+    private static void checkForNotConnected(JSONObject onlinePlayers) {
+        onlinePlayers.forEach((key, value) -> {
            if (value.toString().equals("false")) notConnected(key.toString()); //value == false, client not connected
        });
     }
 
-    /** This function sends a message containing data about not connected users to every connected user  **/
-    private static void notConnected(String user) {
-        System.out.println("user" + user + " not connected");
+    /** This function sends a message containing data about not connected players to every connected player  **/
+    private static void notConnected(String player) {
+        System.out.println("user" + player + " not connected");
         for (gameInstance room : rooms)
-            if (room.isPlayedBy(user)) {
-                System.out.println(room.getTopic() + " -> " + user + " has lost");
-                room.hasLost(user);
+            if (room.isPlayedBy(player)) {
+                System.out.println(room.getTopic() + " -> " + player + " has lost");
+                room.hasLost(player);
             }
         JSONObject obj = new JSONObject();
-        obj.put("not_connected", user);
+        obj.put("not_connected", player);
         sendMessage("broadcast", obj.toString());
     }
 

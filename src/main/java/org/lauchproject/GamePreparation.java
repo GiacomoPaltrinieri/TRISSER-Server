@@ -29,7 +29,7 @@ public class GamePreparation {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println("date: " + date);
+        System.out.println("date and time of the event: " + date);
 
         timer.schedule(new MyTimeTask(), date);
     }

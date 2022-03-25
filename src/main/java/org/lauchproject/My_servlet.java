@@ -14,15 +14,14 @@ import javax.servlet.annotation.*;
 @WebServlet(name = "MyServlet",value ="/MyServlet")
 public class My_servlet extends HttpServlet{
     private static ArrayList<String> users=new ArrayList<>();
-    private static ArrayList<String> logs=new ArrayList<>();
     private static JSONObject rules = new JSONObject();
-    private static String bot_num,temp_gioco_bot,temp_connessione,data_start_game,temp_start_game,bot_istance;
+    private static String bot_num,temp_gioco_bot,temp_connessione,data_start_game,temp_start_game,bot_instance;
 
     /**
      * User Getter
      * @return ArrayList of Strings
      */
-    public static ArrayList<String> getUsers() {
+    public static ArrayList<String> getPlayers() {
         return users;
     }
 
@@ -75,11 +74,11 @@ public class My_servlet extends HttpServlet{
     }
 
     /**
-     * Bot istance number(total matches of the tournament) Getter
+     * Bot instance number(total matches of the tournament) Getter
      * @return
      */
-    public static String getBot_istance() {
-        return bot_istance;
+    public static String getBot_instance() {
+        return bot_instance;
     }
 
     /**
@@ -91,7 +90,7 @@ public class My_servlet extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
-        bot_istance=request.getParameter("bot_istance");
+        bot_instance=request.getParameter("bot_istance");
         bot_num=request.getParameter("bot_num");
         temp_gioco_bot=request.getParameter("temp_gioco_bot");
         temp_connessione=request.getParameter("temp_connessione");
@@ -105,7 +104,7 @@ public class My_servlet extends HttpServlet{
         }
 
         rules.put("time", temp_gioco_bot);
-        rules.put("bot_number", bot_istance);
+        rules.put("bot_number", bot_instance);
         rules.put("connection_time", temp_connessione);
         rules.put("date", data_start_game + " " + temp_start_game + ":00");
 
@@ -113,15 +112,15 @@ public class My_servlet extends HttpServlet{
         out.write("Server Started\nWork in Progress!!!");
         System.out.println(rules);
         System.out.println(users);
-        System.out.println("TEMP GIOCO = "+temp_gioco_bot);
-        System.out.println("temp conne = "+temp_connessione);
-        System.out.println("bot istance = "+bot_istance);
+        System.out.println("TEMP GIOCO = " + temp_gioco_bot);
+        System.out.println("temp conne = " + temp_connessione);
+        System.out.println("bot instance = " + bot_instance);
         new GUI_CLI_Run("GUI");
 
     }
 
     /**
-     * Killing the servlet istance
+     * Killing the servlet instance
      */
     public void destroy() {
     }
