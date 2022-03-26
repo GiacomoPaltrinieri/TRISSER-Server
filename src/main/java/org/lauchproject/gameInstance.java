@@ -2,7 +2,9 @@ package org.lauchproject;
 import java.util.ArrayList;
 
 /**
- * This class represents a single topic which contains more rooms (mail1_mail2)
+ * The gameInstance class is used to manage and contain all the information about a single match between two different bots.
+ * A gameInstance Object is used multiple times in a SingleRoom where all the matches between two bots have to be disputed.
+ * @see gameInstance
  **/
 
 public class gameInstance {
@@ -59,7 +61,7 @@ public class gameInstance {
         return parts[index];
     }
 
-    /** This function reports whether or not a user is part of that instance**/
+    /** This function reports whether a user is part of that instance **/
     public boolean isPlayedBy(String user) {
         if (topic.contains(user))
             return true;

@@ -5,22 +5,37 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * This class represents a single instance of a room (mail1_mail2/n -> n is represented by a SingleRoom Object)
+ * The SingleRoom class is used to manage and contain all the information about a single match between two different bots.
+ * A SingleRoom Object is used multiple times in a gameInstance Object where all the matches between two bots have to be disputed.
+ *
+ * @see gameInstance
+ * @author Giacomino
  **/
 
 
 public class SingleRoom {
 
-    /** Attributes **/
+    /** roomNumber is a unique identifier that refers to a single game. **/
     private int roomNumber; // mail1_mail2/38 -> roomNumber=38
+    /** timers array is used to contain the timers for the two bots. **/
     private StopWatchTimer[] timers = new StopWatchTimer[2];
+    /** moves contains the set of moves that have been done in the game. **/
     private ArrayList<Integer> moves = new ArrayList<>(); // list of moves that have been made
+    /** playerToMove contains the name (mail) that is expected to make a move. **/
     private String playerToMove; //name of the player that has to move
+    /** winner contains the name (mail) of the winner of a match in case there is one. It may contain "none" in case no one wins the game**/
     private String winner = "StillPlaying"; // the name of the winning bot
-    private String temp;
-    public static ArrayList<String> winningMoves = new ArrayList<>(Arrays.asList("147", "258", "369", "123", "456", "789", "159", "357")); //,        Arrays.asList(["1","4", "7"], ["2","5", "8"], ["3","6", "9"], ["1","2", "3"], ["4","5", "6"], ["7","8", "9"], ["1","5", "9"], ["3","5", "7"])
+    /** Contains the set of moves to be made in order to win the game **/
+    public static ArrayList<String> winningMoves = new ArrayList<>(Arrays.asList("147", "258", "369", "123", "456", "789", "159", "357"));
 
-    /** Constructor **/
+    /** ---------------------------- Constructor ---------------------------- **/
+
+    /**
+     *
+     * @param roomNumber Used to identify the single game. mail1_mail2/n -> roomNumber = n.
+     * @param timers Used to create a timer for every user involved in the SingleRoom
+     * @param playerToMove Used to define which player has to make the first move and then which player
+     */
     public SingleRoom(int roomNumber, StopWatchTimer[] timers, String playerToMove) {
         this.roomNumber = roomNumber;
         this.timers = timers;
@@ -59,11 +74,6 @@ public class SingleRoom {
             System.out.println("not his turn");
         }
     }
-
-    public ArrayList<Integer> getMoves() {
-        return moves;
-    }
-
 
     /** returns true if the player has won, false if the game is still running **/
     private boolean isWinning() {
