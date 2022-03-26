@@ -14,7 +14,7 @@ public class PlayerPoints{
     }
 
     public PlayerPoints(String player, String result) {
-        String[] player_score = new String[2];
+        String[] player_score;
         player_score = player.split(":");
         this.player = player_score[0];
         this.wins = Integer.parseInt(player_score[1]);

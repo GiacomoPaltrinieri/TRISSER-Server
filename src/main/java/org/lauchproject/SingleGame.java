@@ -5,15 +5,13 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * The SingleRoom class is used to manage and contain all the information about a single match between two different bots.
- * A SingleRoom Object is used multiple times in a gameInstance Object where all the matches between two bots have to be disputed.
+ * The SingleGame class is used to manage and contain all the information about a single match between two different bots.
+ * A SingleGame Object is used multiple times in a gameInstance Object where all the matches between two bots have to be disputed.
  *
  * @see gameInstance
  * @author Giacomino
  **/
-
-
-public class SingleRoom {
+public class SingleGame {
 
     /** roomNumber is a unique identifier that refers to a single game. **/
     private int roomNumber; // mail1_mail2/38 -> roomNumber=38
@@ -31,17 +29,25 @@ public class SingleRoom {
     /** ---------------------------- Constructor ---------------------------- **/
 
     /**
+     * The constructor is used to set the values that define a single room.
      *
      * @param roomNumber Used to identify the single game. mail1_mail2/n -> roomNumber = n.
-     * @param timers Used to create a timer for every user involved in the SingleRoom
+     * @param timers Used to create a timer for every user involved in the SingleGame
      * @param playerToMove Used to define which player has to make the first move and then which player
      */
-    public SingleRoom(int roomNumber, StopWatchTimer[] timers, String playerToMove) {
+    public SingleGame(int roomNumber, StopWatchTimer[] timers, String playerToMove) {
         this.roomNumber = roomNumber;
         this.timers = timers;
         this.playerToMove = playerToMove;
     }
 
+    /**
+     * This function receives a move and, after verifying its validity, adds it to the moves array.
+     *
+     * @param move Contains the player move to be added to the array of moves.
+     * @param user Contains the username of the player that has sent the move.
+     * @param topic Contains the topic that identifies the game the two players are disputing.
+     */
     public void makeMove(int move, String user, String topic) {
         if (user.equals(playerToMove)){
             // user turn to move
@@ -75,7 +81,11 @@ public class SingleRoom {
         }
     }
 
-    /** returns true if the player has won, false if the game is still running **/
+    /**
+     * This function is used to determine whether a move is winning for a specific user or not.
+     *
+     * @return returns true is the player has won the game, returns false if the game is still going.
+     */
     private boolean isWinning() {
         ArrayList<Integer> playerMoves = new ArrayList<>();
         String[] winningMovesSet = new String[3];
@@ -114,29 +124,45 @@ public class SingleRoom {
             return false;
     }
 
+    /**
+     * This function is used to get the room number of the specific game.
+     * @return roomNumber returns the room number of the single game.
+     */
     public int getRoomNumber() {
         return roomNumber;
     }
 
-    private String changePlayerToMove() {
+    /**
+     * When a move is done, this function is used to set the player that has to move as the other player.
+     * When stopping the timer, if the player has no time left, the winner will be set as the other player.
+     */
+    private void changePlayerToMove() {
         int t = 0;
         for (int i = 0; i <= 1; i++){
             if (!timers[i].getPlayer().equals(playerToMove) && t == 0){ //
                 t++;
                 playerToMove = timers[i].getPlayer();
                 timers[i].stop();
+                changePlayerToMove();
                 if (timers[i].getTime(StopWatchTimer.SECONDS) <= 0)
-                    return timers[i].getPlayer() ;
+                    setWinner(playerToMove);
+                changePlayerToMove();
             }else
                 timers[i].start();
         }
-        return "";
     }
 
+    /**
+     * Takes the winner name as an input, and sets the local attribute this.winner as the received parameter.
+     * @param winner Contains the name of the bot that has won the game.
+     */
     public void setWinner(String winner) {
         this.winner=winner;
     }
 
+    /**
+     * Sets the player that has to make a move as the loser, this.winner will be the user that has not to make a move.
+     */
     public void setLoser(){
         if (playerToMove.equals(timers[0].getPlayer()))
             setWinner(timers[1].getPlayer());
@@ -144,6 +170,13 @@ public class SingleRoom {
             setWinner(timers[0].getPlayer());
     }
 
+    /**
+     * This function is used to return the winner name.
+     * In case the game is still not over the returned value will be "StillPlaying".
+     * In case there is not a winner, the returned value will be "none".
+     *
+     * @return this.winner returns the game winner name.
+     */
     public String getWinner() {
         return this.winner;
     }
