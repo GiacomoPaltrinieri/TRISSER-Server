@@ -8,15 +8,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * This class is used to wait a specific time and date to run an MqttPubPrint Object.
- *
+ * The GamePreparation Class is a class specifically made to execute a certain snippet (in this case MqttPubPrint Class) at a certain time and a certain date.
  * @author Giacomino
  * @see MQTTPubPrint
- * @see GameSettings
  */
 public class GamePreparation {
-    /** Formatter, defines the format of the time and date that has to be passed as a parameter. **/
+    /** <strong>df</strong> is used to define the format that has to be respected when calling the constructor.**/
     static DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    /** <strong>timer</strong> Timer that expires and starts the game once time has come.**/
     static Timer timer = new Timer();
 
     /**
