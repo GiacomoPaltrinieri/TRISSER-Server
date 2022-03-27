@@ -231,6 +231,9 @@ public class MQTTPubPrint {
         sendMessage("broadcast", obj.toString());
     }
 
+    /**
+     * This function is used to generate the mail content that will be sent to every player after the end of the tournament.
+     */
     private void mailResults() {
         StringBuilder total= new StringBuilder();
         for (PlayerPoints playerWin : playerWins) total.append(playerWin.returnValue()).append("\n");

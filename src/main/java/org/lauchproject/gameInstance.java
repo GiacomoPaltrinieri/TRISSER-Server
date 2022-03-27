@@ -99,8 +99,9 @@ public class gameInstance {
     }
 
     /**
+     * Given a player name this function checks whether the topic is played or not by that player.
      *
-     * @param player
+     * @param player The player name you want to check
      * @return Returns true if the player is one of the players involved in the GameInstance Object, else way the returned value will be false.
      */
     public boolean isPlayedBy(String player) {
@@ -110,7 +111,7 @@ public class gameInstance {
     }
 
     /**
-     * This function is used to set a user as a winner in <stron>every</stron> SingleGame Object
+     * This function is used to set a user as a winner in <strong>every</strong> SingleGame Object
      * @param user Contains the user that has to be set as the loser in every SingleGame Object
      */
     public void hasLost(String user) {

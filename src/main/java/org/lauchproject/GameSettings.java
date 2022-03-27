@@ -264,6 +264,10 @@ public class GameSettings {
         writeToFile(path, toWrite, false);
     }
 
+    /**
+     * Getter used to return the name of every topic that will be used to play the tournament.
+     * @return Returns the list of topics.
+     */
     public static ArrayList<String> getTopics(){
         return topics;
     }
