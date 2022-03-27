@@ -7,16 +7,21 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
 /**
- * Get the rules for the tournament from the front-end
+ * Get the rules for the tournament from the send-data.js script
  * @author Ali
  * @version 4.0
  */
 @WebServlet(name = "MyServlet",value ="/MyServlet")
 public class My_servlet extends HttpServlet{
+    /**Attributes**/
+    /** ArrayLIst of Strings used to store all the bots emails **/
     private static ArrayList<String> users=new ArrayList<>();
+    /**JSONObject use to store all the tournament rules**/
     private static JSONObject rules = new JSONObject();
+    /**String variables to contain single rules **/
     private static String bot_num,temp_gioco_bot,temp_connessione,data_start_game,temp_start_game,bot_instance;
-
+    /**Methods**/
+    /**Getters**/
     /**
      * User Getter
      * @return ArrayList of Strings
@@ -50,7 +55,7 @@ public class My_servlet extends HttpServlet{
     }
 
     /**
-     * Bot Connectio time Getter
+     * Bot Connection time Getter
      * @return String
      */
     public static String getTemp_connessione() {
@@ -58,7 +63,7 @@ public class My_servlet extends HttpServlet{
     }
 
     /**
-     * Tournament starting time getter
+     * Tournament starting Date getter
      * @return String
      */
     public static String getData_start_game() {
@@ -82,39 +87,53 @@ public class My_servlet extends HttpServlet{
     }
 
     /**
-     * Post method to get Tournaments rules from the front-end request body
+     * Post method to get Tournaments rules from the XMLHttpReques created by send_data.js
      * @param request
      * @param response
      * @throws IOException
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        /**Setting the content type of the response**/
         response.setContentType("text/html");
+
+        /**Initializing bot_istance with front-end parameter  **/
         bot_instance=request.getParameter("bot_istance");
+        /**Initializing bot_num with front-end parameter  **/
         bot_num=request.getParameter("bot_num");
+        /**Initializing temp_gioco_bot with front-end parameter  **/
         temp_gioco_bot=request.getParameter("temp_gioco_bot");
+        /**Initializing temp_connessione with front-end parameter  **/
         temp_connessione=request.getParameter("temp_connessione");
+        /**Initializing data_Start_game with front-end parameter  **/
         data_start_game=request.getParameter("data_start_game");
+        /**Initializing temp_start_game with front-end parameter  **/
         temp_start_game=request.getParameter("temp_start_game");
 
-        int i=0;
-
-        for (i=0;i<Integer.parseInt(bot_num);i++){
+        /**For loop to add in users bots emails
+         * this will repeat for bot_num
+         * **/
+        for (int i=0;i<Integer.parseInt(bot_num);i++){
              users.add(request.getParameter("email_"+i));
         }
 
+        /**Add in JSONObject temp_gioco_bot**/
         rules.put("time", temp_gioco_bot);
+        /**Add in JSONObject bot_instance**/
         rules.put("bot_number", bot_instance);
+        /**Add in JSONObject temp_connessione**/
         rules.put("connection_time", temp_connessione);
-        rules.put("date", data_start_game + " " + temp_start_game + ":00");
+        /**Add in JSONObject data_start_game and temp_start_game**/
+        rules.put("date", data_start_game + " " + temp_start_game);
 
+        /**Send to the front-end a simple massage **/
         PrintWriter out = response.getWriter();
         out.write("Server Started\nWork in Progress!!!");
-        System.out.println(rules);
-        System.out.println(users);
-        System.out.println("TEMP GIOCO = " + temp_gioco_bot);
-        System.out.println("temp conne = " + temp_connessione);
-        System.out.println("bot instance = " + bot_instance);
+
+        /**
+         * Initializing new  GUI_CLI_Run Object
+         * @param String
+         */
         new GUI_CLI_Run("GUI");
 
     }

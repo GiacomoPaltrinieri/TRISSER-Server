@@ -2,6 +2,8 @@
 <!DOCTYPE html>
 <html>
 <!--Main page for Rules setting-->
+<!--@author Ali-->
+<!--@version 1.0-->
     <head>
         <title>Trisser</title>
         <link rel="stylesheet" type="text/css" href="home_page_style.css">
@@ -10,12 +12,14 @@
         <h1 id="titolo"> TRISSER </h1>
         <br>
         <div id="mybody">
+            <!--myform that call onsubmit take_values() from send_data.js-->
             <form id="myform"  method="post" onsubmit="return take_values()">
                 <h2>Set Rules</h2>
                 <div id="alfa_cont">
                     <div class="container" >
 
                         <input type="number" placeholder="NUMERO ISTANZE BOT" name="bot_istance" class="myin"  required>
+                        <!--onchange call create_input() from send_data.js-->
                         <input type="number" placeholder="NUMERO BOT" name="bot_num" class="myin" onchange="create_input()" required>
 
                         <div id="input_cont">

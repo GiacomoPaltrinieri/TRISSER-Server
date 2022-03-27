@@ -1,5 +1,7 @@
 /**
  *Main page Style and Positioning
+ *@author Ali
+ *@version 1.0
  */
 #mybody{
     display: flex;
@@ -63,6 +65,7 @@
     height: 90%;
 }
 
+/**Media query to allow adaptation when the screen size changes**/
 @media screen  and (max-width: 800px){
     #mybody{
         flex-direction: column;
