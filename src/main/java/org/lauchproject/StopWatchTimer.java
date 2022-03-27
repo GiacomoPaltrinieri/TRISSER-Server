@@ -6,7 +6,7 @@ package org.lauchproject;
  * Once time is over the player will automatically lose the game.
  *
  * @author Giacomino
- * @see SingleRoom
+ * @see SingleGame
  */
 
 public class StopWatchTimer {

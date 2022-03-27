@@ -224,21 +224,10 @@ public class MQTTPubPrint {
         setRankingOrder();
 
         JSONObject obj = new JSONObject();
-        int t = 0;
         for (int i = 0; i < playerWins.size(); i++)
-        {
-            if (i == 0){
-                obj.put(i+1, playerWins.get(i).getPlayer());
-                t=i;
-            }
-            else if (playerWins.get(i).getWins() == playerWins.get(i-1).getWins())
-                obj.put(t, playerWins.get(i).getPlayer());
-            else{
-                t++;
-                obj.put(t, playerWins.get(i).getPlayer());
-            }
-        }
-        System.out.println(obj);
+            obj.put(i+1, playerWins.get(i).returnValue());
+
+        System.out.println("RESULTS : " + obj);
         sendMessage("broadcast", obj.toString());
     }
 
