@@ -1,8 +1,6 @@
 package org.lauchproject;
 
-/**
- * This class is used to send mail
- **/
+
 
 import java.util.Properties;
 import javax.mail.Message;
@@ -12,19 +10,26 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
+/**
+ * This class is used to send mails to Players participating in the tournament.
+ *
+ * @author Giacomino
+ * @see org.lauchproject.GameSettings
+ */
 public class SendMail {
-    private String to;
-    private String sbj;
-    private String msg;
-
-    /** This class enables the server to send emails **/
+    /**
+     * given certain info this function is able to send a mail.
+     *
+     * @param to Takes the email to which you want to send the mail.
+     * @param sbj Takes the Subject of the mail.
+     * @param msg Takes the message to send in the mail.
+     */
     protected static void send(String to, String sbj, String msg) {
 
         // Sender's email ID needs to be mentioned
         String from = "TRISSER.server@gmail.com";
 
-        // Assuming you are sending email from through gmails smtp
+        // Gmails smtp
         String host = "smtp.gmail.com";
 
         // Get system properties
