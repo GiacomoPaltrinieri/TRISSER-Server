@@ -25,7 +25,7 @@ public class gameInstance {
     /** Array containing the two players involved in a single GameInstance. **/
     private String[] players = new String[2]; // players involved in this room
     /** ArrayList containing every SingleGame that the two players have to play against each other. **/
-    private ArrayList<SingleGame>  single_rooms = new ArrayList<>(); // all the single_rooms (room_number, ArrayList moves, userMove)
+    private ArrayList<SingleGame> single_games = new ArrayList<>(); // all the single_rooms (room_number, ArrayList moves, userMove)
     /** Contains the two timers that will be given to every player in every match. **/
     private StopWatchTimer timers[] = new StopWatchTimer[2];
 
@@ -51,9 +51,9 @@ public class gameInstance {
         timers[1] = new StopWatchTimer(Integer.parseInt(time), players[1]);
         for (int i = 0; i < this.room_number; i++){
             if (i%2==0) // if the instance number is not odd the first player to move will be player[0]
-                single_rooms.add(new SingleGame(i, timers, players[0]));
+                single_games.add(new SingleGame(i, timers, players[0]));
             else // if the instance number is odd the first player to move will be player[1]
-                single_rooms.add(new SingleGame(i, timers, players[1]));
+                single_games.add(new SingleGame(i, timers, players[1]));
         }
 
     }
@@ -75,17 +75,18 @@ public class gameInstance {
      * @param move Contains the move the player wants to execute.
      */
     public void makeAMove(int instance, String player, int move){
-        for (int i = 0; i < single_rooms.size(); i++){
-            if (single_rooms.get(i).getRoomNumber() == instance){
+        System.out.println("entra in makeamove class -> gameInstance");
+        for (int i = 0; i < single_games.size(); i++){
+            if (single_games.get(i).getRoomNumber() == instance){
                 System.out.println("entra in MakeAMove su gameInstance " + move + " " + player);
-                single_rooms.get(i).makeMove(move, player, topic);
+                single_games.get(i).makeMove(move, player, topic);
             }
         }
     }
 
     /**
      *
-      * @param string The string you want to split.
+     * @param string The string you want to split.
      * @param splitChars The char or string you want to use as a delimiter to split the String.
      * @param index An integer number that defines which part of the split String you want to return.
      * @return Returns the subString generated using the parameters inserted.
@@ -120,8 +121,8 @@ public class gameInstance {
         MQTTPubPrint.removeTopic(topic); // stop listening to this topic
         System.out.println("Winner on room" + topic + " = " + winner);
 
-        for (int i = 0; i < single_rooms.size(); i ++){
-            single_rooms.get(i).setWinner(winner);
+        for (int i = 0; i < single_games.size(); i ++){
+            single_games.get(i).setWinner(winner);
         }
     }
 
@@ -129,7 +130,7 @@ public class gameInstance {
      * Getter used to return every Object that describes a game part of the GameInstance.
      * @return ArrayList containing every SingleGame Object defined in a single GameInstance.
      */
-    public ArrayList<SingleGame> getSingle_rooms() {
-        return single_rooms;
+    public ArrayList<SingleGame> getSingle_games() {
+        return single_games;
     }
 }

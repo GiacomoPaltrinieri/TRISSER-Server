@@ -228,7 +228,7 @@ public class GameSettings {
             singleMail.put("rules", rules);
             roomList = getTopicAccess(topics, players.get(i));
             singleMail.put("rooms", roomList);
-            singleMail.put("room_instance", GUI_CLI_Run.getBot_instance());
+            singleMail.put("room_instance", Integer.parseInt(GUI_CLI_Run.getBot_instance()));
 
             SendMail.send(players.get(i), "GAME", singleMail.toString().replace("\\",""));
             singleMail.clear();

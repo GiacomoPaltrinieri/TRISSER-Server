@@ -126,12 +126,16 @@ public class MQTTPubPrint {
             //this function gets called every time a message arrives.
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String msg = message.toString();
+                System.out.println("entra in message arrived.");
                 if (IsJson.isJSONValid(msg)){
+                    System.out.println("messaggio valido");
                     JSONParser parser = new JSONParser();
                     JSONObject json = (JSONObject) parser.parse(msg);
 
-                    if(!Objects.isNull(json) && json.containsKey("move"))
+                    if(!Objects.isNull(json) && json.containsKey("move")){
+                        System.out.println("messaggio ricevuto = move");
                         moveReceived(topic, json);
+                    }
                     else if (topic.contains("online/"))
                        onlinePlayerMessage(topic.replace("online/", ""));
                 }else{ // not a valid message
@@ -157,9 +161,11 @@ public class MQTTPubPrint {
      * @param json JSON Object containing the move done by the player.
      */
     private void moveReceived(String topic, JSONObject json) {
+        System.out.println("entra in moveReceived");
         if (topics.contains(subStringTopic(topic, "/", getTOPIC))){ //if the topic is valid (present in the list of topic)
             for (int i = 0; i < topics.size(); i++){
                 if (subStringTopic(topic, "/", getTOPIC).equals(rooms.get(i).getTopic())){
+                    System.out.println("trovata la substring");
                     rooms.get(i).makeAMove(Integer.parseInt(subStringTopic(topic, "/", getINSTANCE)), subStringTopic(topic, "/", getPLAYER),Integer.parseInt((String) json.get("move")));
                 }
             }
@@ -258,8 +264,8 @@ public class MQTTPubPrint {
     private void addPoints() {
         for (PlayerPoints playerWin : playerWins) {
             for (gameInstance room : rooms) {
-                for (int k = 0; k < room.getSingle_rooms().size(); k++) {
-                    if (room.getSingle_rooms().get(k).getWinner().equals(playerWin.getPlayer()))
+                for (int k = 0; k < room.getSingle_games().size(); k++) {
+                    if (room.getSingle_games().get(k).getWinner().equals(playerWin.getPlayer()))
                         playerWin.addPoint();
                 }
             }
@@ -268,9 +274,9 @@ public class MQTTPubPrint {
     /** If some games are still not over after the game is completed this function ends them, and sets the loser as the one who had to make the move (playerToMove) **/
     private void endNotOverGames() {
         for (gameInstance room : rooms) {
-            for (int j = 0; j < room.getSingle_rooms().size(); j++) {
-                if (room.getSingle_rooms().get(j).getWinner().equals("StillPlaying"))
-                    room.getSingle_rooms().get(j).setLoser();
+            for (int j = 0; j < room.getSingle_games().size(); j++) {
+                if (room.getSingle_games().get(j).getWinner().equals("StillPlaying"))
+                    room.getSingle_games().get(j).setLoser();
             }
         }
     }
