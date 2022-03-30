@@ -1,5 +1,6 @@
 package org.lauchproject;
 
+import org.json.simple.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,7 +61,7 @@ public class SingleGame {
                 System.out.println("invalid move");
             } else if(moves.size()<=4){
                 moves.add(move);
-                changePlayerToMove();
+                changePlayerToMove(user, topic);
                 System.out.println("numero di mosse insufficienti per vincere, mossa valida");
             }else{
                 moves.add(move);
@@ -71,8 +72,8 @@ public class SingleGame {
                     System.out.println("no one has won (pareggio)");
                     setWinner("none");
                 }
-                 else{
-                    changePlayerToMove();
+                else{
+                    changePlayerToMove(user, topic);
                     System.out.println("not won");
                 }
             }
@@ -80,6 +81,7 @@ public class SingleGame {
             System.out.println("not his turn");
         }
     }
+
 
     /**
      * This function is used to determine whether a move is winning for a specific user or not.
@@ -135,21 +137,12 @@ public class SingleGame {
     /**
      * When a move is done, this function is used to set the player that has to move as the other player.
      * When stopping the timer, if the player has no time left, the winner will be set as the other player.
+     * @param player the player that has made the move
+     * @param topic the topic in which the player has made the move
      */
-    private void changePlayerToMove() {
-        int t = 0;
-        for (int i = 0; i <= 1; i++){
-            if (!timers[i].getPlayer().equals(playerToMove) && t == 0){ //
-                t++;
-                playerToMove = timers[i].getPlayer();
-                timers[i].stop();
-                changePlayerToMove();
-                if (timers[i].getTime(StopWatchTimer.SECONDS) <= 0)
-                    setWinner(playerToMove);
-                changePlayerToMove();
-            }else
-                timers[i].start();
-        }
+    private void changePlayerToMove(String player, String topic) {
+        playerToMove = topic.replace(player, "");
+        playerToMove = playerToMove.replace("_", "");
     }
 
     /**
